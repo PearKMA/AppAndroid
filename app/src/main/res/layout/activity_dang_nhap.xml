@@ -193,21 +193,11 @@
                 android:layerType="software"
                 android:src="@drawable/dash" />
 
-            <TextView
-                android:id="@+id/textView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/imageView2"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp"
-                android:text="Đăng nhập với"
-                android:textColor="@color/textColor"
-                android:textSize="12sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView1"
+                android:layout_below="@+id/imageView2"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="20dp"

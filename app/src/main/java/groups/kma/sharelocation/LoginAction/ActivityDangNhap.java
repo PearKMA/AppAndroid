@@ -21,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import groups.kma.sharelocation.MainActivity;
 import groups.kma.sharelocation.R;
 
 public class ActivityDangNhap extends AppCompatActivity {
@@ -151,8 +152,8 @@ public class ActivityDangNhap extends AppCompatActivity {
             // Sign in success, update UI with the signed-in user's information
             Toast.makeText(ActivityDangNhap.this, "Đăng nhập thành công.", Toast.LENGTH_SHORT).show();
             progressDialog.dismiss();
-            //startActivity(new Intent(getApplicationContext(), saukhidangnhap.class));
-            //finish();
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
+            finish();
         } else {
             Toast.makeText(getApplicationContext(), "Hãy xác nhận email trong hòm thư trước", Toast.LENGTH_SHORT).show();
             mAuth.signOut();
