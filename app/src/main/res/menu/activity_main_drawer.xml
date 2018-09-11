@@ -5,33 +5,37 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_lienket"
+            android:icon="@drawable/ic_menu_tc_key_24"
+            android:title="Liên kết người thân" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
+            android:id="@+id/nav_nguoithan"
+            android:icon="@drawable/ic_menu_tc_family_24"
+            android:title="Người thân" />
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_dinhvi"
+            android:icon="@drawable/ic_menu_tc_location_24"
+            android:title="Vị trí" />
     </group>
 
-    <item android:title="Communicate">
-        <menu>
+    <item android:title="Tiên ích">
+        <menu >
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_guitin"
+                android:icon="@drawable/ic_menu_tc_messes_24"
+                android:title="Gửi tin"/>
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_vungantoan"
+                android:icon="@drawable/ic_menu_tc_location_sheild_24"
+                android:title="Vùng an toàn" />
+            <item
+                android:id="@+id/nav_caidat"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Cài đặt" />
+            <item
+                android:id="@+id/nav_huongdan"
+                android:icon="@drawable/ic_menu_tc_tut_24"
+                android:title="Hướng dẫn sử dụng" />
         </menu>
     </item>
 

@@ -3,6 +3,7 @@ package groups.kma.sharelocation;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import groups.kma.sharelocation.LienKetAction.LienKetActivity;
+import groups.kma.sharelocation.MapAction.MapsActivity;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,18 +92,41 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_lienket) {
+            setTitle("Liên kết người thân");
+            LienKetActivity lienKetActivity = new LienKetActivity();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.contentmain,lienKetActivity).commit();
+        } else if (id == R.id.nav_nguoithan) {
+            setTitle("Người thân");
+            MapsActivity mapsActivity = new MapsActivity();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.contentmain,mapsActivity).commit();
+        } else if (id == R.id.nav_dinhvi) {
+            setTitle("Vị trí");
+            MapsActivity mapsActivity = new MapsActivity();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.contentmain,mapsActivity).commit();
+        } else if (id == R.id.nav_guitin) {
+            setTitle("Gửi tin");
+            MapsActivity mapsActivity = new MapsActivity();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.contentmain,mapsActivity).commit();
+        } else if (id == R.id.nav_vungantoan) {
+            setTitle("Vùng an toàn");
+            MapsActivity mapsActivity = new MapsActivity();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.contentmain,mapsActivity).commit();
+        } else if (id == R.id.nav_caidat) {
+            setTitle("Cài đặt");
+            MapsActivity mapsActivity = new MapsActivity();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.contentmain,mapsActivity).commit();
+        } else if (id == R.id.nav_huongdan) {
+            setTitle("Hướng dẫn sử dụng");
+            MapsActivity mapsActivity = new MapsActivity();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.contentmain,mapsActivity).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
