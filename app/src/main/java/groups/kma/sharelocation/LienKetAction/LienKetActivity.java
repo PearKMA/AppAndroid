@@ -29,7 +29,7 @@ public class LienKetActivity extends Fragment {
         CreateRandom();
         return view;
     }
-
+    // random key
     public void CreateRandom(){
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,9 +39,6 @@ public class LienKetActivity extends Fragment {
 
                 String randomLetters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-                for (int n=0; n<numLetters; n++) {
-                    Log.i("Random letters", "" + randomLetters.charAt(rnd.nextInt(randomLetters.length())));
-                }
                 String text1 = ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
                                 ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
                                 ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
