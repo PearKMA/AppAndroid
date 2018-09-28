@@ -20,6 +20,7 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import groups.kma.sharelocation.Chat.ChatActivity;
 import groups.kma.sharelocation.LienKetAction.LienKetActivity;
 import groups.kma.sharelocation.LoginAction.ActivityDangNhap;
 import groups.kma.sharelocation.MapAction.MapsActivity;
@@ -119,9 +120,9 @@ public class MainActivity extends AppCompatActivity
             fragmentManager.beginTransaction().replace(R.id.contentmain,mapsActivity).commit();
         } else if (id == R.id.nav_guitin) {
             setTitle("Gửi tin");
-            MapsActivity mapsActivity = new MapsActivity();
+            ChatActivity chatActivity = new ChatActivity();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.contentmain,mapsActivity).commit();
+            fragmentManager.beginTransaction().replace(R.id.contentmain,chatActivity).commit();
         } else if (id == R.id.nav_vungantoan) {
             setTitle("Vùng an toàn");
             MapsActivity mapsActivity = new MapsActivity();
