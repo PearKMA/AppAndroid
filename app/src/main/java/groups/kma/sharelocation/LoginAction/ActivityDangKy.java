@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import groups.kma.sharelocation.R;
+import groups.kma.sharelocation.model.Users;
 
 public class ActivityDangKy extends AppCompatActivity {
     private EditText edtUserName;
@@ -49,6 +50,7 @@ public class ActivityDangKy extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
     }
+    // khi bấm nút Sign Up
     public void btCreateAccount(View view) {
         SignUp();
     }
@@ -86,7 +88,6 @@ public class ActivityDangKy extends AppCompatActivity {
             return;
         }
         //xác thực password nếu trùng với pass ở trên thì vứt hết data lên database
-
         if (password.equals(cfpassword)) {
             if (chkBoxTerms.isChecked()) {
                 mAuth.createUserWithEmailAndPassword(emailAD, password)
@@ -114,7 +115,7 @@ public class ActivityDangKy extends AppCompatActivity {
         }
 
     }
-
+    // hàm xác thực và up dữ liệu lên server
     //verify email and upload user's data to database
     private void sendEmailVerification() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
