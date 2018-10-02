@@ -39,9 +39,10 @@ public class ChatActivity extends Fragment {
     }
 
     public void chathe(){
-
+        //xac thuc user hien tai
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        // doc database tren server
         DatabaseReference databaseReference =  firebaseDatabase.getReference(mAuth.getUid()).child("Users");
         if (user != null) {
             databaseReference.addValueEventListener(new ValueEventListener() {

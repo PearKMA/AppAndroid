@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -17,23 +18,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import groups.kma.sharelocation.Chat.ChatActivity;
 import groups.kma.sharelocation.LienKetAction.LienKetActivity;
 import groups.kma.sharelocation.LoginAction.ActivityDangNhap;
+import groups.kma.sharelocation.LoginAction.ActivityUser;
 import groups.kma.sharelocation.MapAction.MapsActivity;
+import groups.kma.sharelocation.model.Users;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    TextView navUsername,navEmail;
+    ImageView avatar;
+    private View headerView;
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase firebaseDatabase;
+
     private SharedPreferences preferences;
     private Boolean saveLogin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mAuth = FirebaseAuth.getInstance();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -53,6 +74,32 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        headerView = navigationView.getHeaderView(0);
+        ThongTinUser();
+        //get username
+        navEmail = headerView.findViewById(R.id.tvEmail);
+        navUsername = headerView.findViewById(R.id.tvUsername);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference =  firebaseDatabase.getReference(mAuth.getUid()).child("Users");
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Users users = dataSnapshot.getValue(Users.class);
+                    String  name = users.getUserName();
+                    String email = users.getEmail();
+                    navUsername.setText(name);
+                    navEmail.setText(email);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+
         addControls();
         addEvents();
     }
@@ -62,6 +109,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void addControls() {
+    }
+
+    public void ThongTinUser(){
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, ActivityUser.class));
+            }
+        });
     }
 
     @Override
