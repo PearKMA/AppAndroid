@@ -15,6 +15,8 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         txt1 = findViewById(R.id.textView);
         String id_user = getIntent().getStringExtra("user_id");
+
         txt1.setText(id_user);
+
     }
 }
