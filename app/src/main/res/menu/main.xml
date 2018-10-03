@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
+    <!--<item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:title="Đăng Xuất"
-        app:showAsAction="never" />
+        app:showAsAction="never" />-->
+    <item android:id="@+id/option_get_place"
+        android:title="Vị trí của tôi"></item>
 </menu>

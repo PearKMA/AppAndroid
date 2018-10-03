@@ -23,4 +23,14 @@
     </string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_user">Thông tin người dùng</string>
+    <string-array name="arrType">
+        <item>Chế độ xem chuẩn</item>
+        <item>Chế độ vệ tinh</item>
+        <item>Chế độ địa hình</item>
+        <item>Chế độ hỗn hợp</item>
+        <item>Không</item>
+    </string-array>
+    <string name="default_info_title">Vị trí hiện tại</string>
+    <string name="default_info_snippet">Chưa có thông tin</string>
+    <string name="pick_place">Chọn địa điểm</string>
 </resources>
