@@ -64,7 +64,6 @@ public class ActivityUser extends AppCompatActivity {
     private static final int STORAGE_PERMISSION_CODE = 1906;
     private Uri imagePath;
     private StorageReference storageReference;
-    private String temp = "";
 
     private Users myAccount;
     private Context context;
@@ -76,7 +75,7 @@ public class ActivityUser extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -85,7 +84,6 @@ public class ActivityUser extends AppCompatActivity {
         tvUsername2 = findViewById(R.id.username2);
         tvEmail = findViewById(R.id.emailuser);
         imageUser = findViewById(R.id.imguser);
-
 
         mAuth = FirebaseAuth.getInstance();
         firebaseStorage = FirebaseStorage.getInstance();
@@ -106,6 +104,7 @@ public class ActivityUser extends AppCompatActivity {
                 Users users = dataSnapshot.getValue(Users.class);
                 tvUsername1.setText(users.getUserName());
                 tvUsername2.setText(users.getUserName());
+                tvEmail.setText(users.getEmail());
             }
 
             @Override
@@ -130,11 +129,10 @@ public class ActivityUser extends AppCompatActivity {
 
 
     public void logOut(View view) {
-        Toast.makeText(ActivityUser.this, "Log Out", Toast.LENGTH_SHORT).show();
         AlertDialog.Builder alert = new AlertDialog.Builder(ActivityUser.this);
-        alert.setTitle("Log out");
-        alert.setMessage("Do you want to log out?");
-        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        alert.setTitle("Đăng xuất");
+        alert.setMessage("Bạn có muốn đăng xuất không?");
+        alert.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //thoát khổi database và về màn hình chính
@@ -144,7 +142,7 @@ public class ActivityUser extends AppCompatActivity {
                 preferences.edit().putBoolean("saveLogin", false).apply();
             }
         });
-        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton("Không", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 return;
