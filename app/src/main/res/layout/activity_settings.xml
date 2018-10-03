@@ -5,17 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Chat.SettingsActivity">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:background="@color/mauChuDao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+    </android.support.v7.widget.Toolbar>
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="170dp"
+        android:layout_below="@id/toolbar"
         android:id="@+id/settingImage"
         android:layout_height="170dp"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="15dp"
         android:src="@mipmap/ic_launcher_round" />
 
     <TextView
+        android:layout_below="@+id/settingImage"
         android:textSize="30dp"
         android:id="@+id/settingDisplayname"
         android:layout_width="wrap_content"
@@ -26,6 +33,8 @@
         android:text="Display Name" />
 
     <TextView
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
         android:layout_marginTop="10dp"
         android:layout_below="@id/settingDisplayname"
         android:id="@+id/settingStatus"

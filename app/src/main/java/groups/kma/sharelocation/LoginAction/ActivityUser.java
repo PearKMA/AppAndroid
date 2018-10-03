@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -54,6 +55,7 @@ public class ActivityUser extends AppCompatActivity {
 
     TextView tvUsername1,tvUsername2,tvEmail;
     CircleImageView imageUser;
+
 
     private DatabaseReference userDB;
     private FirebaseAuth mAuth;

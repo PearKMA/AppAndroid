@@ -51,7 +51,12 @@
             android:name=".LoginAction.ActivityUser"
             android:label="@string/title_activity_user"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Chat.SettingsActivity"></activity>
+        <activity android:name=".Chat.SettingsActivity" />
+        <activity android:name=".Chat.StatusActivity" />
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".Chat.AllUsersActivity"></activity>
     </application>
 
 </manifest>
