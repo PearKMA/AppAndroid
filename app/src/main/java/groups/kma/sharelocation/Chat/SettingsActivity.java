@@ -2,6 +2,7 @@ package groups.kma.sharelocation.Chat;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -30,19 +31,26 @@ import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import groups.kma.sharelocation.R;
 import groups.kma.sharelocation.model.Users;
+import id.zelory.compressor.Compressor;
 
 public class SettingsActivity extends AppCompatActivity {
     private DatabaseReference mUserDatabase;
     private FirebaseUser mCurrentUser;
-    private TextView displayname,status;
+    private TextView displayname, status;
     private CircleImageView mImage;
-    Button changeStt,changeImg;
-    private static final int GALLERY_PICK =1;
+    Button changeStt, changeImg;
+    private static final int GALLERY_PICK = 1;
+    Bitmap thumb_bitmap;
 
     private StorageReference mImagesStorage;
     private ProgressDialog mProgressDialog;
@@ -55,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
         status = findViewById(R.id.settingStatus);
         mImage = findViewById(R.id.settingImage);
         changeImg = findViewById(R.id.button2);
-        changeStt= findViewById(R.id.button3);
+        changeStt = findViewById(R.id.button3);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -63,10 +71,10 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Thông tin người dùng");
 
-        mCurrentUser= FirebaseAuth.getInstance().getCurrentUser();
+        mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         mImagesStorage = FirebaseStorage.getInstance().getReference();
-        String current_uid= mCurrentUser.getUid();
-        mUserDatabase= FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
+        String current_uid = mCurrentUser.getUid();
+        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -75,8 +83,12 @@ public class SettingsActivity extends AppCompatActivity {
                 displayname.setText(users.getUserName());
                 status.setText(users.getStatus());
                 String image = dataSnapshot.child("image").getValue().toString();
+                String thumb_image = dataSnapshot.child("photoUrl").getValue().toString();
 
-                Picasso.get().load(image).into(mImage);
+                if (!image.equals("default")) {
+                    Picasso.get().load(image).placeholder(R.drawable.acc_box).into(mImage);
+                }
+
 
             }
 
@@ -93,7 +105,7 @@ public class SettingsActivity extends AppCompatActivity {
                 Intent galleryIntent = new Intent();
                 galleryIntent.setType("image/*");
                 galleryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(galleryIntent,"SELECT IMAGE"),GALLERY_PICK);
+                startActivityForResult(Intent.createChooser(galleryIntent, "SELECT IMAGE"), GALLERY_PICK);
                 //crop image - co hình ảnh
 //                CropImage.activity()
 //                        .setGuidelines(CropImageView.Guidelines.ON)
@@ -106,10 +118,10 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == GALLERY_PICK && resultCode == RESULT_OK){
+        if (requestCode == GALLERY_PICK && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
             CropImage.activity(imageUri)
-                    .setAspectRatio(1,1)
+                    .setAspectRatio(1, 1)
                     .start(this);
         }
 
@@ -126,31 +138,64 @@ public class SettingsActivity extends AppCompatActivity {
                 mProgressDialog.show();
                 Uri resultUri = result.getUri();
 
+                final File thumb_filePath = new File(resultUri.getPath());
+
                 String current_user_id = mCurrentUser.getUid();
 
-                StorageReference filepath = mImagesStorage.child("profile_images").child(current_user_id+".jpg");
+                try {
+                    thumb_bitmap = new Compressor(this).setMaxWidth(200).setMaxHeight(200)
+                            .setQuality(75)
+                            .compressToBitmap(thumb_filePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                final byte[] thumb_byte = baos.toByteArray();
+
+                StorageReference filepath = mImagesStorage.child("profile_images").child(current_user_id + ".jpg");
+                final StorageReference thumb_filepath = mImagesStorage.child("profile_images").child("thumbs").child(current_user_id + ".jpg");
 
                 filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            if(task.isSuccessful()){
-                                String dowload_url =  task.getResult().getDownloadUrl().toString();
-                                mUserDatabase.child("image").setValue(dowload_url).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                            if(task.isSuccessful()){
-                                                mProgressDialog.dismiss();
-                                                Toast.makeText(SettingsActivity.this, "Upload thành công.", Toast.LENGTH_SHORT).show();
-                                            }else {
+                        if (task.isSuccessful()) {
+                             final String dowload_url = task.getResult().getDownloadUrl().toString();
+                             UploadTask uploadTask = thumb_filepath.putBytes(thumb_byte);
+                            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
 
+                                    String thumb_download = task.getResult().getDownloadUrl().toString();
+
+                                    if (task.isSuccessful()) {
+                                        Map update_hashMap = new HashMap<>();
+                                        update_hashMap.put("image",dowload_url);
+                                        update_hashMap.put("photoUrl",thumb_download);
+                                        mUserDatabase.updateChildren(update_hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    mProgressDialog.dismiss();
+                                                    Toast.makeText(SettingsActivity.this, "Upload thành công.", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    Toast.makeText(SettingsActivity.this, "Đổi ảnh thất bại", Toast.LENGTH_SHORT).show();
+                                                    mProgressDialog.dismiss();
+                                                }
                                             }
+                                        });
+                                    } else {
+                                        Toast.makeText(SettingsActivity.this, "Đổi ảnh thất bại", Toast.LENGTH_SHORT).show();
+                                        mProgressDialog.dismiss();
                                     }
-                                });
+                                }
+                            });
 
-                            }else{
-                                Toast.makeText(SettingsActivity.this, "Đổi ảnh thất bại", Toast.LENGTH_SHORT).show();
-                                mProgressDialog.dismiss();
-                            }
+
+                        } else {
+                            Toast.makeText(SettingsActivity.this, "Đổi ảnh thất bại", Toast.LENGTH_SHORT).show();
+                            mProgressDialog.dismiss();
+                        }
                     }
                 });
 
@@ -161,9 +206,10 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()== android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
@@ -174,7 +220,7 @@ public class SettingsActivity extends AppCompatActivity {
         StringBuilder randomStringBuilder = new StringBuilder();
         int randomLength = generator.nextInt(10);
         char tempChar;
-        for (int i = 0; i < randomLength; i++){
+        for (int i = 0; i < randomLength; i++) {
             tempChar = (char) (generator.nextInt(96) + 32);
             randomStringBuilder.append(tempChar);
         }

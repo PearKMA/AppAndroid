@@ -148,11 +148,11 @@ public class MainActivity extends AppCompatActivity
         }
         if(id == R.id.action_settings){
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-            finish();
+
         }
         if(id == R.id.action_alluser){
             startActivity(new Intent(MainActivity.this, AllUsersActivity.class));
-            finish();
+
         }
 
         return super.onOptionsItemSelected(item);

@@ -42,6 +42,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'com.google.firebase:firebase-auth:12.0.1'
 
+    implementation 'com.firebaseui:firebase-ui-database:2.0.1'
+    implementation 'id.zelory:compressor:2.1.0'
+
     implementation 'com.android.support:multidex:1.0.0'
 }
 
