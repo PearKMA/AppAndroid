@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -79,6 +80,7 @@ public class ActivityUser extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Thông tin người dùng");
 
         tvUsername1 = findViewById(R.id.username1);
         tvUsername2 = findViewById(R.id.username2);
@@ -96,7 +98,9 @@ public class ActivityUser extends AppCompatActivity {
             }
         });
 
-        userDB = firebaseDatabase.getReference(mAuth.getUid()).child("Users");
+        FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = current_user.getUid();
+        userDB = FirebaseDatabase.getInstance().getReference().child("Users").child(uid);
 
         userDB.addValueEventListener(new ValueEventListener() {
             @Override
