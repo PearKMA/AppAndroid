@@ -13,20 +13,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
             <LinearLayout
-
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/imguser"
-                    android:layout_marginTop="20dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/profileimg"
                     android:layout_width="150dp"
-                    android:layout_height="150dp" />
+                    android:layout_height="150dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:onClick="chooseAva"
+                    android:src="@drawable/profileimg"
+                    app:civ_border_color="@color/mauDen"
+                    app:civ_border_width="2dp" />
                 <TextView
                     android:textSize="24sp"
-                    android:id="@+id/nameuser"
+                    android:id="@+id/username1"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -60,6 +62,7 @@
                     android:layout_height="wrap_content"
                     android:text="Tên người dùng"/>
                 <TextView
+                    android:id="@+id/username2"
                     android:textColor="@color/mauDen"
                     android:textSize="16sp"
                     android:layout_width="wrap_content"
@@ -93,6 +96,7 @@
                 android:layout_height="wrap_content"
                 android:text="Email"/>
             <TextView
+                android:id="@+id/emailuser"
                 android:textColor="@color/mauDen"
                 android:textSize="16sp"
                 android:layout_width="wrap_content"
