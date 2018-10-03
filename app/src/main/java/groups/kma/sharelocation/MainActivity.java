@@ -31,6 +31,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import groups.kma.sharelocation.Chat.ChatActivity;
+import groups.kma.sharelocation.Chat.SettingsActivity;
 import groups.kma.sharelocation.LienKetAction.LienKetActivity;
 import groups.kma.sharelocation.LoginAction.ActivityDangNhap;
 import groups.kma.sharelocation.LoginAction.ActivityUser;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity
     private View headerView;
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
-
+    private FirebaseUser mCurrentUser;
     private SharedPreferences preferences;
     private Boolean saveLogin;
 
@@ -82,7 +83,9 @@ public class MainActivity extends AppCompatActivity
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
         firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference =  firebaseDatabase.getReference(mAuth.getUid()).child("Users");
+            mCurrentUser= FirebaseAuth.getInstance().getCurrentUser();
+            String current_uid= mCurrentUser.getUid();
+        DatabaseReference databaseReference =  firebaseDatabase.getReference().child("Users").child(current_uid);
             databaseReference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -145,9 +148,12 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
             dialogSetup();
             return true;
+        }
+        if(id == R.id.action_settings){
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }
 
         return super.onOptionsItemSelected(item);

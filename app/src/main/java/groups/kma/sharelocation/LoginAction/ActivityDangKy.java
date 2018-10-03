@@ -36,7 +36,8 @@ public class ActivityDangKy extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
 
-    String userName, emailAD, password;
+    String userName, emailAD, password,thumbimage="default";
+    String status = "Chào bạn, mình đang sử dụng Ứng dụng này.",image="default";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,9 +134,11 @@ public class ActivityDangKy extends AppCompatActivity {
 
     //gửi thông tin user lên database
     private void sendUserData() {
-        mRef = FirebaseDatabase.getInstance().getReference(mAuth.getUid());
-        Users users = new Users(userName,emailAD,password);
-        mRef.child("Users").setValue(users, new DatabaseReference.CompletionListener() {
+        mRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
+        String uid = current_user.getUid();
+        Users users = new Users(userName,emailAD,password,status,image,thumbimage);
+        mRef.child(uid).setValue(users, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
                 if (databaseError == null) {

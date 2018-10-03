@@ -5,30 +5,14 @@ public class Users {
     private String userName;
     private String email;
     private String password;
+    private String status;
+    private String image;
     private String key;
-    private boolean online;
-
-
 
     public Users() {
 
     }
 
-    public Users(String userName, String email, String password, String key) {
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.key = key;
-    }
-
-    public Users(String photoUrl, String userName, String email, String password, String key, boolean online) {
-        this.photoUrl = photoUrl;
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-        this.key = key;
-        this.online = online;
-    }
 
     public String getKey() {
         return key;
@@ -42,6 +26,29 @@ public class Users {
         this.userName = userName;
         this.email = email;
         this.password = password;
+    }
+    public Users(String userName,String email,String password,String status,String image,String thumbimage){
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.status = status;
+        this.image=image;
+        this.photoUrl=thumbimage;
+    }
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getUserName() {
@@ -75,11 +82,5 @@ public class Users {
         this.photoUrl = photoUrl;
     }
 
-    public boolean isOnline() {
-        return online;
-    }
 
-    public void setOnline(boolean online) {
-        this.online = online;
-    }
 }
