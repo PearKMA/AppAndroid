@@ -14,26 +14,29 @@ public class Users {
     }
 
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public Users(String userName, String email, String password) {
+    public Users(String userName, String status, String thumb_image) {
         this.userName = userName;
-        this.email = email;
-        this.password = password;
+        this.status = status;
+        this.photoUrl = thumb_image;
     }
-    public Users(String userName,String email,String password,String status,String image,String thumbimage){
+
+    public Users(String userName, String email, String password, String status, String image, String thumbimage){
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.status = status;
         this.image=image;
         this.photoUrl=thumbimage;
+    }
+
+
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
     public String getStatus() {
         return status;
