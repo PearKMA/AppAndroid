@@ -85,18 +85,28 @@ public class ProfileActivity extends AppCompatActivity {
                             if (req_type.equals("received")) {
                                 current_state = "req_received";
                                 sendRequest.setText("Đồng ý kết bạn");
+
+                                decline.setVisibility(View.VISIBLE);
+                                decline.setEnabled(true);
+
                             } else if (req_type.equals("sent")) {
                                 current_state = "req_sent";
                                 sendRequest.setText("Hủy yêu cầu kết bạn");
+                                decline.setVisibility(View.INVISIBLE);
+                                decline.setEnabled(false);
                             }
                             mProgressDialog.dismiss();
-                        }else{
+                        } else {
                             mFriendDatabase.child(mCurrentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot dataSnapshot) {
-                                    if(dataSnapshot.hasChild(id_user)){
+                                    if (dataSnapshot.hasChild(id_user)) {
                                         current_state = "friends";
                                         sendRequest.setText("Hủy kết bạn");
+
+                                        decline.setVisibility(View.INVISIBLE);
+                                        decline.setEnabled(false);
+
                                     }
                                     mProgressDialog.dismiss();
                                 }
@@ -147,6 +157,8 @@ public class ProfileActivity extends AppCompatActivity {
 
                                         current_state = "req_sent";
                                         sendRequest.setText("Hủy yêu cầu kết bạn");
+                                        decline.setVisibility(View.INVISIBLE);
+                                        decline.setEnabled(false);
                                         Toast.makeText(ProfileActivity.this, "Gửi yếu cầu thành công.", Toast.LENGTH_SHORT).show();
                                     }
                                 });
@@ -171,6 +183,9 @@ public class ProfileActivity extends AppCompatActivity {
                                                     sendRequest.setEnabled(true);
                                                     current_state = "not_friends";
                                                     sendRequest.setText("Kết bạn");
+
+                                                    decline.setVisibility(View.INVISIBLE);
+                                                    decline.setEnabled(false);
 
                                                 }
                                             });
@@ -201,6 +216,8 @@ public class ProfileActivity extends AppCompatActivity {
                                                                                     sendRequest.setEnabled(true);
                                                                                     current_state = "friends";
                                                                                     sendRequest.setText("Hủy kết bạn");
+                                                                                    decline.setVisibility(View.INVISIBLE);
+                                                                                    decline.setEnabled(false);
 
                                                                                 }
                                                                             });
