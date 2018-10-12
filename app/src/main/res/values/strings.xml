@@ -23,4 +23,8 @@
     </string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_user">Thông tin người dùng</string>
+    <string-array name="arrType">
+        <item>Normal</item>
+        <item>Vệ tinh</item>
+    </string-array>
 </resources>

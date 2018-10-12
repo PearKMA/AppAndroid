@@ -58,7 +58,7 @@ public class ChatActivity extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Users users = dataSnapshot.getValue(Users.class);
-                    String  name = users.getUserName();
+                    String name = users.getUserName();
                     String email = users.getEmail();
                     Toast.makeText(getContext(), ""+name+" "+email+" ", Toast.LENGTH_SHORT).show();
                 }

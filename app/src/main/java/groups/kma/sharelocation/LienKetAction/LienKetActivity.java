@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import java.util.Random;
 
+import groups.kma.sharelocation.MainActivity;
 import groups.kma.sharelocation.R;
 
 public class LienKetActivity extends Fragment {
@@ -34,28 +35,7 @@ public class LienKetActivity extends Fragment {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Random rnd = new Random();
-                int numLetters = 10;
 
-                String randomLetters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-                String text1 = ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                                ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                                ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                                ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()));
-                String text2 = ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                        ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                        ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                        ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()));
-                String text3 = ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                        ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                        ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                        ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()));
-                String text4 = ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                        ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                        ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()))+
-                        ""+randomLetters.charAt(rnd.nextInt(randomLetters.length()));
-                malienket.setText(text1+"-"+text2+"-"+text3+"-"+text4);
             }
         });
 
