@@ -8,10 +8,12 @@ public class Users {
     private String status;
     private String image;
     private String key;
+    private String token;
 
     public Users() {
 
     }
+
 
 
     public Users(String userName, String status, String thumb_image) {
@@ -20,16 +22,24 @@ public class Users {
         this.photoUrl = thumb_image;
     }
 
-    public Users(String userName, String email, String password, String status, String image, String thumbimage){
+    public Users(String userName, String email, String password, String status, String image, String thumbimage,String token){
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.status = status;
         this.image=image;
         this.photoUrl=thumbimage;
+        this.token = token;
     }
 
 
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
 
     public String getKey() {
         return key;

@@ -152,7 +152,8 @@ public class ActivityDangNhap extends AppCompatActivity {
 
     private void checkEmailVerification() {
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user.isEmailVerified()) {
+        // tính năng verified email trước khi đăng nhập - tạm thời hủy bỏ
+        //if (user.isEmailVerified()) {
             //nếu check box được tích thì lưu đăng nhập đến khi người dùng logout
             if (cbRemember.isChecked()) {
                 preferences.edit().putBoolean("saveLogin", true).apply();
@@ -169,11 +170,12 @@ public class ActivityDangNhap extends AppCompatActivity {
             progressDialog.dismiss();
             startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
-        } else {
-            Toast.makeText(getApplicationContext(), "Hãy xác nhận email trong hòm thư trước", Toast.LENGTH_SHORT).show();
-            mAuth.signOut();
-            progressDialog.dismiss();
-        }
+            // hàm if else của tính năng verified
+//        } else {
+//            Toast.makeText(getApplicationContext(), "Hãy xác nhận email trong hòm thư trước", Toast.LENGTH_SHORT).show();
+//            mAuth.signOut();
+//            progressDialog.dismiss();
+//        }
     }
 
     public void showSpinnerProgressDialog() {

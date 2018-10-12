@@ -1,5 +1,6 @@
 package groups.kma.sharelocation.LoginAction;
 
+import android.bluetooth.BluetoothClass;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -21,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import groups.kma.sharelocation.R;
 import groups.kma.sharelocation.model.Users;
@@ -134,10 +136,14 @@ public class ActivityDangKy extends AppCompatActivity {
 
     //gửi thông tin user lên database
     private void sendUserData() {
+
         mRef = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        String DeviceToken = FirebaseInstanceId.getInstance().getToken();
+
         FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = current_user.getUid();
-        Users users = new Users(userName,emailAD,password,status,image,thumbimage);
+        Users users = new Users(userName,emailAD,password,status,image,thumbimage,DeviceToken);
         mRef.child(uid).setValue(users, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
