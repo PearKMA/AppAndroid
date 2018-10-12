@@ -24,6 +24,7 @@ import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import groups.kma.sharelocation.R;
 
@@ -38,6 +39,7 @@ public class ProfileActivity extends AppCompatActivity {
     private DatabaseReference mFriendRequestDatabase;
     private DatabaseReference mFriendDatabase;
     private FirebaseUser mCurrentUser;
+    private DatabaseReference mNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +52,15 @@ public class ProfileActivity extends AppCompatActivity {
         mFriendRequestDatabase = FirebaseDatabase.getInstance().getReference().child("Friend_req");
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         mFriendDatabase = FirebaseDatabase.getInstance().getReference().child("Friends");
+        mNotification = FirebaseDatabase.getInstance().getReference().child("notifications");
 
         imgProfile = findViewById(R.id.imgProfile);
         sendRequest = findViewById(R.id.ketban);
         txtProfileName = findViewById(R.id.dnProfile);
         txtProfileStatus = findViewById(R.id.stProfile);
         decline = findViewById(R.id.huyketban);
+
+        // trang thai nguoi dung mac dinh -> not_friends
         current_state = "not_friends";
 
         mProgressDialog = new ProgressDialog(this);
@@ -81,7 +86,9 @@ public class ProfileActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (dataSnapshot.hasChild(id_user)) {
+
                             String req_type = dataSnapshot.child(id_user).child("request_type").getValue().toString();
+
                             if (req_type.equals("received")) {
                                 current_state = "req_received";
                                 sendRequest.setText("Đồng ý kết bạn");
@@ -134,7 +141,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
-
+        // khi bam nut ket ban
         sendRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,12 +161,27 @@ public class ProfileActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
 
+                                        HashMap<String,String> notificationData = new HashMap<>();
+                                        notificationData.put("from",mCurrentUser.getUid());
+                                        notificationData.put("type","request");
+
+                                        mNotification.child(id_user).push().setValue(notificationData).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                current_state = "req_sent";
+                                                sendRequest.setText("Hủy yêu cầu kết bạn");
+                                                decline.setVisibility(View.INVISIBLE);
+                                                decline.setEnabled(false);
+                                            }
+                                        });
 
                                         current_state = "req_sent";
                                         sendRequest.setText("Hủy yêu cầu kết bạn");
+
                                         decline.setVisibility(View.INVISIBLE);
                                         decline.setEnabled(false);
                                         Toast.makeText(ProfileActivity.this, "Gửi yếu cầu thành công.", Toast.LENGTH_SHORT).show();
+
                                     }
                                 });
                             } else {

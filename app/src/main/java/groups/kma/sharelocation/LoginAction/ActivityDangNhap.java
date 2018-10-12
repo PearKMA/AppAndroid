@@ -16,10 +16,14 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import groups.kma.sharelocation.MainActivity;
 import groups.kma.sharelocation.R;
@@ -30,6 +34,7 @@ public class ActivityDangNhap extends AppCompatActivity {
     private CheckBox cbRemember;
     private ImageButton ibtShowPW;
 
+    private DatabaseReference usersReference;
 
     private FirebaseAuth mAuth;
 
@@ -44,6 +49,7 @@ public class ActivityDangNhap extends AppCompatActivity {
     private static final String FILE_NAME = "File_name";
     private static final String PREF_USERNAME = "username";
     private static final String PREF_PASSWORD = "password";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +61,7 @@ public class ActivityDangNhap extends AppCompatActivity {
         ibtShowPW = findViewById(R.id.ibtShowPW);
 
         mAuth = FirebaseAuth.getInstance();
+        usersReference = FirebaseDatabase.getInstance().getReference().child("Users");
 
         progressDialog = new ProgressDialog(this);
 
@@ -72,8 +79,6 @@ public class ActivityDangNhap extends AppCompatActivity {
 
 
     }
-
-
 
 
     public void ibshowpw(View view) {
@@ -124,7 +129,17 @@ public class ActivityDangNhap extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (task.isSuccessful()) {
-                            checkEmailVerification();
+                            String online_user_id = mAuth.getCurrentUser().getUid();
+                            String DeviceToken = FirebaseInstanceId.getInstance().getToken();
+
+                            usersReference.child(online_user_id).child("device_token").setValue(DeviceToken).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    checkEmailVerification();
+                                }
+                            });
+
+
                         } else {
                             // If sign in fails, display a message to the user.
                             progressDialog.dismiss();
@@ -160,6 +175,7 @@ public class ActivityDangNhap extends AppCompatActivity {
             progressDialog.dismiss();
         }
     }
+
     public void showSpinnerProgressDialog() {
         progressDialog.setTitle("Loading");
         progressDialog.setMessage("Logging in, please wait");
