@@ -53,6 +53,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import groups.kma.sharelocation.Chat.AllUsersActivity;
 import groups.kma.sharelocation.Chat.ChatActivity;
 import groups.kma.sharelocation.Chat.SettingsActivity;
 import groups.kma.sharelocation.LienKetAction.LienKetActivity;
@@ -88,14 +89,7 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -132,7 +126,7 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
-        addControls();
+        //addControls();
     }
 
 
@@ -177,7 +171,10 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             startActivity(new Intent(MainActivity.this, SettingsActivity.class));
         }
+        if(id == R.id.action_alluser){
+            startActivity(new Intent(MainActivity.this, AllUsersActivity.class));
 
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -255,16 +252,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     //start map
-    private void addControls() {
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        PlaceAutocompleteFragment autocompleteFragment =
-                (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(
-                        R.id.place_autocomplete_fragment);
-        autocompleteFragment.setOnPlaceSelectedListener(this);
-    }
+//    private void addControls() {
+//        SupportMapFragment mapFragment =
+//                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
+//
+//        PlaceAutocompleteFragment autocompleteFragment =
+//                (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(
+//                        R.id.place_autocomplete_fragment);
+//        autocompleteFragment.setOnPlaceSelectedListener(this);
+//    }
 
 
     @Override
