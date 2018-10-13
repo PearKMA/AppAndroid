@@ -19,6 +19,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:name=".Chat.OfflineMode">
+
+        <service android:name=".Chat.FirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".LoginAction.ActivityDangNhap"
             android:label="@string/app_name"
@@ -43,12 +50,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".MapAction.MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity android:name=".LienKetAction.LienKetActivity" />
-        <activity android:name=".Chat.Chat" />
-        <activity android:name=".LoginAction.ProfileUserActivity" />
+
         <activity
             android:name=".LoginAction.ActivityUser"
             android:label="@string/title_activity_user"
@@ -59,7 +61,13 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity android:name=".Chat.AllUsersActivity" />
-        <activity android:name=".Chat.ProfileActivity"></activity>
+        <activity android:name=".Chat.ProfileActivity">
+            <intent-filter>
+                <action android:name="groups.kma.sharelocation_TARGET_NOTIFICATION"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+            </intent-filter>
+
+        </activity>
     </application>
 
 </manifest>

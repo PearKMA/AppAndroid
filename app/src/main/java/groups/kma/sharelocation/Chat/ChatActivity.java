@@ -43,35 +43,8 @@ public class ChatActivity extends Fragment {
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mTabLayout = view.findViewById(R.id.main_tabs);
         mTabLayout.setupWithViewPager(mViewPager);
-        chathe();
         return view;
     }
 
-    public void chathe(){
-        //xac thuc user hien tai
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        firebaseDatabase = FirebaseDatabase.getInstance();
-        // doc database tren server
-        DatabaseReference databaseReference =  firebaseDatabase.getReference(mAuth.getUid()).child("Users");
-        if (user != null) {
-            databaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    Users users = dataSnapshot.getValue(Users.class);
-                    String name = users.getUserName();
-                    String email = users.getEmail();
-                    Toast.makeText(getContext(), ""+name+" "+email+" ", Toast.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-
-        }
-    }
-    //
 
 }

@@ -23,8 +23,11 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import groups.kma.sharelocation.R;
 
@@ -62,6 +65,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         // trang thai nguoi dung mac dinh -> not_friends
         current_state = "not_friends";
+        decline.setVisibility(View.INVISIBLE);
+        decline.setEnabled(false);
 
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setTitle("Tải dữ liệu");
@@ -217,12 +222,14 @@ public class ProfileActivity extends AppCompatActivity {
 
                 //TH3 : chấp nhận yêu cầu kết bạn
                 if (current_state.equals("req_received")) {
-                    final String currentDate = DateFormat.getDateTimeInstance().format(new Date());
-                    mFriendDatabase.child(mCurrentUser.getUid()).child(id_user).setValue(currentDate).addOnSuccessListener(
+                    Calendar calForDate = Calendar.getInstance();
+                    SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
+                    final String saveCurrentDate = currentDate.format(calForDate.getTime());
+                    mFriendDatabase.child(mCurrentUser.getUid()).child(id_user).child("date").setValue(saveCurrentDate).addOnSuccessListener(
                             new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    mFriendDatabase.child(id_user).child(mCurrentUser.getUid()).setValue(currentDate)
+                                    mFriendDatabase.child(id_user).child(mCurrentUser.getUid()).child("date").setValue(saveCurrentDate)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
@@ -252,6 +259,25 @@ public class ProfileActivity extends AppCompatActivity {
                             }
                     );
                 } else {
+
+                }
+                    // hủy kết bạn
+                if(current_state.equals("friends")){
+                        mFriendDatabase.child(mCurrentUser.getUid()).child(id_user).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                mFriendDatabase.child(id_user).child(mCurrentUser.getUid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                            current_state = "not_friends";
+                                            sendRequest.setText("Kết bạn");
+                                            decline.setVisibility(View.INVISIBLE);
+                                            decline.setEnabled(false);
+                                            sendRequest.setEnabled(true);
+                                    }
+                                });
+                            }
+                        });
 
                 }
 
