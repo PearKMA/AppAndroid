@@ -51,6 +51,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
 import groups.kma.sharelocation.Chat.AllUsersActivity;
@@ -63,15 +64,17 @@ import groups.kma.sharelocation.MapAction.MapsActivity;
 import groups.kma.sharelocation.model.Users;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback,
-        PlaceSelectionListener, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener {
+        implements NavigationView.OnNavigationItemSelectedListener//,OnMapReadyCallback,
+        //PlaceSelectionListener, GoogleApiClient.ConnectionCallbacks,
+        //GoogleApiClient.OnConnectionFailedListener, LocationListener
+   {
     TextView navUsername, navEmail;
     ImageView avatar;
     private View headerView;
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
-    private FirebaseUser mCurrentUser;
+    FirebaseUser mCurrentUser;
+    private DatabaseReference userReference;
     private SharedPreferences preferences;
     private Boolean saveLogin;
     //use for map
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
+        mCurrentUser = mAuth.getCurrentUser();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -105,6 +109,13 @@ public class MainActivity extends AppCompatActivity
         navEmail = headerView.findViewById(R.id.tvEmail);
         navUsername = headerView.findViewById(R.id.tvUsername);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if(mCurrentUser != null){
+            String online_user_id = mAuth.getCurrentUser().getUid();
+            userReference = FirebaseDatabase.getInstance().getReference().child("Users").child(online_user_id);
+        }
+
+
         if (user != null) {
             firebaseDatabase = FirebaseDatabase.getInstance();
             mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -129,6 +140,28 @@ public class MainActivity extends AppCompatActivity
         //addControls();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mCurrentUser = mAuth.getCurrentUser();
+        if(mCurrentUser==null){
+                //if null log out
+            FirebaseAuth.getInstance().signOut();
+            finish();
+            startActivity(new Intent(getApplicationContext(), ActivityDangNhap.class));
+        }else if (mCurrentUser!=null){
+            userReference.child("online").setValue("true");
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mCurrentUser!=null){
+            userReference.child("online").setValue(ServerValue.TIMESTAMP);
+        }
+
+    }
 
     public void ThongTinUser() {
         headerView.setOnClickListener(new View.OnClickListener() {
@@ -235,6 +268,11 @@ public class MainActivity extends AppCompatActivity
         alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+
+                if(mCurrentUser != null){
+                    userReference.child("online").setValue(ServerValue.TIMESTAMP);
+                }
+
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 startActivity(new Intent(getApplicationContext(), ActivityDangNhap.class));
@@ -262,7 +300,7 @@ public class MainActivity extends AppCompatActivity
 //                        R.id.place_autocomplete_fragment);
 //        autocompleteFragment.setOnPlaceSelectedListener(this);
 //    }
-
+/*
 
     @Override
     public void onPlaceSelected(Place place) {
@@ -373,4 +411,6 @@ public class MainActivity extends AppCompatActivity
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+    */
 }

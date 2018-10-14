@@ -1,6 +1,5 @@
 package groups.kma.sharelocation.Chat;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -87,7 +85,7 @@ public class AllUsersActivity extends AppCompatActivity {
             username.setText(name);
         }
         public void setStatus(String status){
-            TextView mStatus =(TextView) mView.findViewById(R.id.textView2);
+            TextView mStatus =(TextView) mView.findViewById(R.id.custom_user_last_seen);
             mStatus.setText(status);
         }
         public void setImage(String image ){
