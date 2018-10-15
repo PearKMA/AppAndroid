@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "521118938243-lsf5mvank0ja9tsd9kk6sisuhc57p6if.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "groups.kma.sharelocation",
+            "certificate_hash": "36208f2cb1e734a851b662241185ba183262dcd0"
+          }
+        },
+        {
           "client_id": "521118938243-o5e0kk19un7n3uim2t6v7djinn63jmil.apps.googleusercontent.com",
           "client_type": 3
         }
