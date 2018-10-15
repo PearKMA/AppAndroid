@@ -15,7 +15,17 @@
 
     </android.support.v7.widget.Toolbar>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chatview"
+        android:layout_below="@id/chat_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_above="@id/chatline"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
     <LinearLayout
+        android:id="@+id/chatline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

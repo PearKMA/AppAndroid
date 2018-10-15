@@ -153,7 +153,7 @@ public class FriendFragment extends Fragment {
         }
         public void setDate(String date){
                 TextView userName = mView.findViewById(R.id.custom_user_last_seen);
-            userName.setText(date);
+            userName.setText("Lần cuối online :\n" + date);
         }
         public void setUsername(String name){
             TextView usname = mView.findViewById(R.id.textView1);
