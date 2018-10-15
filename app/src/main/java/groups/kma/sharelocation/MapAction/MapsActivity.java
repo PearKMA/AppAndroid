@@ -2,6 +2,7 @@ package groups.kma.sharelocation.MapAction;
 
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -23,13 +24,26 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import groups.kma.sharelocation.R;
 
-public class MapsActivity extends Fragment implements OnMapReadyCallback {
+public class MapsActivity extends Fragment implements OnMapReadyCallback,LocationListener {
     private View view;
     private GoogleMap mMap;
     private CameraPosition mCameraPosition;
@@ -46,6 +60,11 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
     private static final String KEY_LOCATION = "location";
     //private ClusterManager<MyItem> mClusterManager;
 
+    private String currentGroupLocation, currentUserId,currentUserName,currentDate,currentTime;
+    private FirebaseAuth mAuth;
+    private DatabaseReference UsersRef, GroupLocationRef,GroupLocationKeyRef;
+    String locationKey;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_maps, container, false);
@@ -58,9 +77,72 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
             mapFragment.onResume();
             mapFragment.getMapAsync(this);
         }
+        mAuth = FirebaseAuth.getInstance();
+        currentUserId=mAuth.getCurrentUser().getUid();
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        GroupLocationRef =FirebaseDatabase.getInstance().getReference().child("GroupsLocation").
+                child("Group");
+        getUserInfo();
+        getAllLocation();
+
+
         return view;
 
     }
+
+    private void getAllLocation() {
+        GroupLocationRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()){
+                    DisplayLocations(dataSnapshot);
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()){
+                    DisplayLocations(dataSnapshot);
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void getUserInfo() {
+        UsersRef.child(currentUserId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists())
+                {
+                    currentUserName=dataSnapshot.child("userName").getValue().toString();
+
+
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -110,6 +192,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
                         if (task.isSuccessful() ) {
                             // Set the map's camera position to the current location of the device.
                             mLastKnownLocation = task.getResult();
+                            onLocationChanged(mLastKnownLocation);
                             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(mLastKnownLocation.getLatitude(),
                                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
@@ -181,5 +264,85 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
             }
         }
         updateLocationUI();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location!=null) {
+            double latitude = location.getLatitude();
+            double longtitude = location.getLongitude();
+
+            locationKey=GroupLocationRef.push().getKey();
+            Calendar ccalForDate=Calendar.getInstance();
+            SimpleDateFormat currentDateFormat = new SimpleDateFormat("MM/dd");
+            currentDate=currentDateFormat.format(ccalForDate.getTime());
+            Calendar ccalForDTime=Calendar.getInstance();
+            SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
+            currentTime=currentTimeFormat.format(ccalForDTime.getTime());
+
+            HashMap<String,Object> groupLocationKey=new HashMap<>();
+            GroupLocationRef.updateChildren(groupLocationKey);
+
+            GroupLocationKeyRef=GroupLocationRef.child(locationKey);
+
+            HashMap<String,Object> locationInfoMap=new HashMap<>();
+            locationInfoMap.put("name",currentUserName);
+            locationInfoMap.put("latitude",latitude);
+            locationInfoMap.put("longtitude",longtitude);
+            locationInfoMap.put("date",currentDate);
+            locationInfoMap.put("time",currentTime);
+
+            GroupLocationKeyRef.updateChildren(locationInfoMap);
+        }
+    }
+
+    private void DisplayLocations(DataSnapshot dataSnapshot) {
+        Iterator iterator=dataSnapshot.getChildren().iterator();
+        mMap.clear();
+        while (iterator.hasNext())
+        {
+            String locDate=(String) ((DataSnapshot)iterator.next()).getValue();
+            Double locLatitude=(Double) ((DataSnapshot)iterator.next()).getValue();
+            Double locLongtitude=(Double) ((DataSnapshot)iterator.next()).getValue();
+            String locName=(String) ((DataSnapshot)iterator.next()).getValue();
+            String locTime=(String) ((DataSnapshot)iterator.next()).getValue();
+
+            if (locName==currentUserName){
+                ShowAllLocation(locDate,locLatitude,locLongtitude,"You're here!",locTime);
+                LatLng latLng = new LatLng(locLatitude, locLongtitude);
+                Marker info = mMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(locName)
+                        .snippet(locDate+" at "+locTime));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+            }
+        }
+    }
+
+    private void ShowAllLocation(String locDate, Double locLatitude, Double locLongtitude,
+                                 String locName, String locTime)
+    {
+        LatLng latLng = new LatLng(locLatitude, locLongtitude);
+        Marker info = mMap.addMarker(new MarkerOptions()
+                .position(latLng)
+                .title(locName)
+                .snippet(locDate+" at "+locTime));
+    }
+
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
     }
 }
