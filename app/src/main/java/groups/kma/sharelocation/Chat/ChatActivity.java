@@ -45,6 +45,7 @@ public class ChatActivity extends Fragment {
         mTabLayout.setupWithViewPager(mViewPager);
         return view;
     }
+    //1 2 3 4 5
 
 
 }

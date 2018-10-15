@@ -22,7 +22,7 @@
         android:background="@android:color/background_light"
         android:orientation="horizontal">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/select_image"
             android:layout_width="50dp"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:inputType="textMultiLine"
             android:padding="10dp" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/send_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
