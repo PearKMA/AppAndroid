@@ -42,7 +42,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     }
 
     @Override
-    public void onBindViewHolder(MessageViewHolder holder, int position) {
+    public void onBindViewHolder(final MessageViewHolder holder, int position) {
         String message_sender_id = mAuth.getCurrentUser().getUid();
         Messages messages = userMessageList.get(position);
         String fromUserId= messages.getFrom();
@@ -52,7 +52,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String userName = dataSnapshot.child("userName").getValue().toString();
-                      //      String userImage = dataSnapshot.child("PhotoUrl").getValue().toString();
+                String userImage = dataSnapshot.child("photoUrl").getValue().toString();
+                Picasso.get().load(userImage).placeholder(R.drawable.icon_online).into(holder.userProfileImage);
             }
 
             @Override
