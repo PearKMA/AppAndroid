@@ -53,13 +53,20 @@
             android:name=".LoginAction.ActivityUser"
             android:label="@string/title_activity_user"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Chat.SettingsActivity" />
-        <activity android:name=".Chat.StatusActivity" />
+
+        <activity android:name=".Chat.SettingsActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+        <activity android:name=".Chat.StatusActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".Chat.AllUsersActivity" />
-        <activity android:name=".Chat.ProfileActivity">
+
+        <activity android:name=".Chat.AllUsersActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".Chat.ProfileActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="groups.kma.sharelocation_TARGET_NOTIFICATION" />
 
@@ -67,6 +74,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Chat.MessageActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             >
 
         </activity>
