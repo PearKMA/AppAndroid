@@ -4,10 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/AppTheme.NoActionBar"
     android:background="@android:color/darker_gray"
     tools:context=".Chat.MessageActivity">
 
     <android.support.v7.widget.Toolbar
+        android:theme="@style/AppTheme.NoActionBar"
         android:id="@+id/chat_bar_layout"
         android:layout_width="match_parent"
         android:background="@color/mauChuDao"

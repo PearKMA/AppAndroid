@@ -42,9 +42,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-storage:12.0.1'
     implementation 'com.google.android.gms:play-services:12.0.1'
     implementation 'com.google.firebase:firebase-auth:12.0.1'
-    implementation 'com.google.android.gms:play-services-maps:16.0.0'
-    implementation 'com.google.android.gms:play-services-location:16.0.0'
-    implementation 'com.google.android.gms:play-services-places:16.0.0'
+    implementation 'com.google.android.gms:play-services-maps:12.0.1'
+    implementation 'com.google.android.gms:play-services-location:12.0.1'
+    implementation 'com.google.android.gms:play-services-places:12.0.1'
 
     implementation 'com.firebaseui:firebase-ui-database:2.0.1'
     implementation 'id.zelory:compressor:2.1.0'
