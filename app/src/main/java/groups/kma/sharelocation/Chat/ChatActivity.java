@@ -39,7 +39,7 @@ public class ChatActivity extends Fragment {
         view = inflater.inflate(R.layout.activity_chat, container, false);
         mAuth = FirebaseAuth.getInstance();
         mViewPager = view.findViewById(R.id.tabPager);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getFragmentManager());
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mTabLayout = view.findViewById(R.id.main_tabs);
         mTabLayout.setupWithViewPager(mViewPager);
