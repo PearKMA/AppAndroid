@@ -34,6 +34,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -178,22 +179,12 @@ public class MapsActivity extends Fragment implements
         }
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
         buildGoogleApiClient();
         this.googleMap = googleMap;
-        if (ActivityCompat.checkSelfPermission(this.getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getContext(),
+        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(),
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -219,7 +210,7 @@ public class MapsActivity extends Fragment implements
 
     @Override
     public void onLocationChanged(Location location) {
-        if (location!=null) {
+
             double latitude = location.getLatitude();
             double longtitude = location.getLongitude();
 
@@ -244,7 +235,7 @@ public class MapsActivity extends Fragment implements
             locationInfoMap.put("time",currentTime);
 
             GroupLocationKeyRef.updateChildren(locationInfoMap);
-        }
+            myLocation(location);
     }
 
     private void DisplayLocations(DataSnapshot dataSnapshot) {
@@ -259,12 +250,13 @@ public class MapsActivity extends Fragment implements
             String locTime=(String) ((DataSnapshot)iterator.next()).getValue();
 
             if (locName==currentUserName){
-                ShowAllLocation(locDate,locLatitude,locLongtitude,"You're here!",locTime);
                 LatLng latLng = new LatLng(locLatitude, locLongtitude);
                 Marker info = googleMap.addMarker(new MarkerOptions()
                         .position(latLng)
-                        .title(locName)
-                        .snippet(locDate+" at "+locTime));
+                        .title("You're here!")
+                        .snippet(locDate+" at "+locTime)
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                googleMap.addMarker(new MarkerOptions().position(latLng));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
                 googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
             }else {
@@ -285,9 +277,9 @@ public class MapsActivity extends Fragment implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this.getContext(),
+        if (ActivityCompat.checkSelfPermission(this.getActivity(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this.getContext(),
+                ActivityCompat.checkSelfPermission(this.getActivity(),
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -298,12 +290,12 @@ public class MapsActivity extends Fragment implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-            locationManager = (LocationManager)this.getContext().getSystemService(Context.LOCATION_SERVICE);
+            locationManager = (LocationManager)this.getActivity().getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String bestProvider = locationManager.getBestProvider(criteria, true);
         Location location = locationManager.getLastKnownLocation(bestProvider);
         if (location != null) {
-            myLocation(location);
+            onLocationChanged(location);
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
                 0, this);
