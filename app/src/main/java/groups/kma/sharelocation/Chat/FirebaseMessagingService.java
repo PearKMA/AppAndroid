@@ -8,7 +8,7 @@ import android.support.v4.app.NotificationCompat;
 import com.google.firebase.messaging.RemoteMessage;
 
 import groups.kma.sharelocation.R;
-
+// service thong bao cua firebase
 public class FirebaseMessagingService extends com.google.firebase.messaging.FirebaseMessagingService {
 
     @Override

@@ -179,9 +179,9 @@ public class RequestFragment extends Fragment {
                                             }
                                         });
                                     }else if(request_type.equals("sent")){
-                                        Button req_sent_btn = viewHolder.mView.findViewById(R.id.request_accept_btn);
-                                        req_sent_btn.setText("Req Sent");
-                                        viewHolder.mView.findViewById(R.id.request_cancel_btn).setVisibility(View.INVISIBLE);
+                                        //Button req_sent_btn = viewHolder.mView.findViewById(R.id.request_accept_btn);
+                                        //req_sent_btn.setText("Req Sent");
+                                        //viewHolder.mView.findViewById(R.id.request_cancel_btn).setVisibility(View.INVISIBLE);
 
                                         UserReference.child(list_user_id).addValueEventListener(new ValueEventListener() {
                                             @Override

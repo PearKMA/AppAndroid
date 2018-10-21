@@ -16,15 +16,23 @@
         android:layout_height="wrap_content">
 
     </android.support.v7.widget.Toolbar>
+    <!--change-->
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/chatview"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="wrap_content"
+        android:id="@+id/message_swipe_layout"
         android:layout_below="@id/chat_bar_layout"
-        android:layout_width="match_parent"
         android:layout_above="@id/chatline"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/chatview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            ></android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/chatline"

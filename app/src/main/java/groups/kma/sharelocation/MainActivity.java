@@ -15,7 +15,9 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -61,6 +63,8 @@ import groups.kma.sharelocation.LienKetAction.LienKetActivity;
 import groups.kma.sharelocation.LoginAction.ActivityDangNhap;
 import groups.kma.sharelocation.LoginAction.ActivityUser;
 import groups.kma.sharelocation.MapAction.MapsActivity;
+import groups.kma.sharelocation.NguoiThan.NguoiThanActivity;
+import groups.kma.sharelocation.VungAnToan.VungAnToanActivity;
 import groups.kma.sharelocation.model.Users;
 
 public class MainActivity extends AppCompatActivity
@@ -114,8 +118,6 @@ public class MainActivity extends AppCompatActivity
             String online_user_id = mAuth.getCurrentUser().getUid();
             userReference = FirebaseDatabase.getInstance().getReference().child("Users").child(online_user_id);
         }
-
-
         if (user != null) {
             firebaseDatabase = FirebaseDatabase.getInstance();
             mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -140,7 +142,9 @@ public class MainActivity extends AppCompatActivity
         //addControls();
     }
 
-    @Override
+
+
+       @Override
     protected void onStart() {
         super.onStart();
         mCurrentUser = mAuth.getCurrentUser();
@@ -216,50 +220,98 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        //FragmentManager fragmentManager = getSupportFragmentManager();
+        //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+    /*
+        Fragment fragment = null;
+        switch(id){
+            case R.id.nav_lienket: fragment = new LienKetActivity();
+                                    replaceFragment(fragment);
+            break;
+            case R.id.nav_nguoithan: fragment = new NguoiThanActivity();
+            break;
+            case R.id.nav_dinhvi: fragment = new MapsActivity();
+            break;
+            case R.id.nav_guitin: fragment = new ChatActivity();
+            break;
+            case R.id.nav_vungantoan: fragment = new VungAnToanActivity();
+            break;
+            case R.id.nav_caidat: fragment = new VungAnToanActivity();
+            break;
+            case R.id.nav_huongdan: fragment = new VungAnToanActivity();
+            break;
+        }
+
+        if (fragment != null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.contentX, fragment);
+            ft.commit();
+        }
+    */
 
         if (id == R.id.nav_lienket) {
             setTitle("Liên kết người thân");
             LienKetActivity lienKetActivity = new LienKetActivity();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.contentmain, lienKetActivity).commit();
+            fragmentManager.beginTransaction().replace(R.id.contentX, lienKetActivity).commit();
         } else if (id == R.id.nav_nguoithan) {
             setTitle("Người thân");
-            MapsActivity mapsActivity = new MapsActivity();
+            NguoiThanActivity nguoiThanActivity = new NguoiThanActivity();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.contentmain, mapsActivity).commit();
+            fragmentManager.beginTransaction().replace(R.id.contentX, nguoiThanActivity).commit();
         } else if (id == R.id.nav_dinhvi) {
-            setTitle("Vị trí");
-            MapsActivity mapsActivity = new MapsActivity();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.contentmain, mapsActivity).commit();
+            //setTitle("Vị trí");
+            //MapsActivity mapsActivity = new MapsActivity();
+            startActivity(new Intent(MainActivity.this,MapsActivity.class));
         } else if (id == R.id.nav_guitin) {
             setTitle("Gửi tin");
             ChatActivity chatActivity = new ChatActivity();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.contentmain, chatActivity).commit();
+            fragmentManager.beginTransaction().replace(R.id.contentX, chatActivity).commit();
         } else if (id == R.id.nav_vungantoan) {
             setTitle("Vùng an toàn");
-            MapsActivity mapsActivity = new MapsActivity();
+            VungAnToanActivity vungAnToanActivity = new VungAnToanActivity();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.contentmain, mapsActivity).commit();
+            fragmentManager.beginTransaction().replace(R.id.contentX, vungAnToanActivity).commit();
         } else if (id == R.id.nav_caidat) {
             setTitle("Cài đặt");
             MapsActivity mapsActivity = new MapsActivity();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.contentmain, mapsActivity).commit();
+            //fragmentManager.beginTransaction().replace(R.id.contentX, mapsActivity).commit();
         } else if (id == R.id.nav_huongdan) {
             setTitle("Hướng dẫn sử dụng");
             MapsActivity mapsActivity = new MapsActivity();
             FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.contentmain, mapsActivity).commit();
+            //fragmentManager.beginTransaction().replace(R.id.contentX, mapsActivity).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    /*
+       private void replaceFragment(Fragment newFragment) {
+           FragmentTransaction trasection = getFragmentManager().beginTransaction();
+           if(!newFragment.isAdded()){
+               try{
+                   //FragmentTransaction trasection =
+                   getFragmentManager().beginTransaction();
+                   trasection.replace(R.id.contentX, newFragment);
+                   trasection.addToBackStack(null);
+                   trasection.commit();
 
-    //log out
+               }catch (Exception e) {
+                   // TODO: handle exception
+                   //AppConstants.printLog(e.getMessage());
+
+               }
+           }else
+               trasection.show(newFragment);
+
+       }
+       }
+    */
+       //log out
     private void dialogSetup() {
         AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
         alert.setTitle("Log out");

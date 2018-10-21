@@ -27,4 +27,6 @@
         <item>Normal</item>
         <item>Vệ tinh</item>
     </string-array>
+    <string name="title_activity_nguoi_than">NguoiThanActivity</string>
+    <string name="title_activity_vung_an_toan">VungAnToanActivity</string>
 </resources>

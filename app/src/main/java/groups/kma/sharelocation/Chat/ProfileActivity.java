@@ -86,7 +86,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Picasso.get().load(image).placeholder(R.drawable.acc_box).into(imgProfile);
 
                 //Friends list and request
-
+                // check trang thai nguoi dung
                 mFriendRequestDatabase.child(mCurrentUser.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {

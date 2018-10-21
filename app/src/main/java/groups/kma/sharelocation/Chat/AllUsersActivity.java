@@ -6,13 +6,18 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -22,6 +27,8 @@ import groups.kma.sharelocation.model.Users;
 public class AllUsersActivity extends AppCompatActivity {
     private RecyclerView mUsersList;
     private DatabaseReference mUsersDatabase;
+    private EditText search_txt;
+    private ImageButton search_button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,10 +38,24 @@ public class AllUsersActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Các người dùng hiện tại");
+        search_txt = findViewById(R.id.search_text);
+        search_button = findViewById(R.id.search_btn);
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
         mUsersList = findViewById(R.id.rcViewUser);
         mUsersList.setHasFixedSize(true);
         mUsersList.setLayoutManager(new LinearLayoutManager(this));
+
+        search_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String searchusername = search_txt.getText().toString();
+                if(TextUtils.isEmpty(searchusername)){
+                    Toast.makeText(AllUsersActivity.this, "Nhập tên người cần tìm.", Toast.LENGTH_SHORT).show();
+                }else {
+                    SearchForPeopleAndFriend(searchusername);
+                }
+            }
+        });
 
 
     }
@@ -46,11 +67,11 @@ public class AllUsersActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    private void SearchForPeopleAndFriend(String searchusername ){
+        Toast.makeText(AllUsersActivity.this, "Đang tìm kiếm", Toast.LENGTH_SHORT).show();
+        Query searchPeopleAndFriend = mUsersDatabase.orderByChild("userName").startAt(searchusername).endAt(searchusername+"\uf8ff");
         FirebaseRecyclerAdapter<Users,UsersViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Users, UsersViewHolder>(
-                Users.class,R.layout.item_user_singer_layout,UsersViewHolder.class,mUsersDatabase
+                Users.class,R.layout.item_user_singer_layout,UsersViewHolder.class,searchPeopleAndFriend
         ) {
             @Override
             protected void populateViewHolder(UsersViewHolder viewHolder, Users model, int position) {

@@ -45,20 +45,19 @@
         android:textSize="20dp"/>
 
     <Button
+        android:layout_below="@id/settingStatus"
         android:id="@+id/button2"
         android:layout_width="133dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="140dp"
         android:text="Đổi ảnh" />
 
     <Button
         android:id="@+id/button3"
+        android:layout_below="@id/button2"
         android:layout_width="133dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="73dp"
         android:text="Đổi trạng thái" />
 </RelativeLayout>

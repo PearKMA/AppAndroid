@@ -13,8 +13,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.InflateException;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +33,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -56,13 +59,13 @@ import java.util.Iterator;
 
 import groups.kma.sharelocation.R;
 
-public class MapsActivity extends Fragment implements
+public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         LocationListener,
         PlaceSelectionListener,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
-    private View view;
+    private static View view;
     private CameraPosition mCameraPosition;
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
@@ -82,29 +85,19 @@ public class MapsActivity extends Fragment implements
     private Marker marker;
     private LocationManager locationManager;
 
-
     private String currentGroupLocation, currentUserId, currentUserName, currentDate, currentTime;
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, GroupLocationRef, GroupLocationKeyRef;
     String locationKey;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_maps, container, false);
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_maps);
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        //Auto search box
-        /*PlaceAutocompleteFragment autocompleteFragment =
-                (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(
-                        R.id.place_autocomplete_fragment);
-        autocompleteFragment.setOnPlaceSelectedListener(this);*/
-        if (mapFragment != null) {
-            mapFragment.onCreate(null);
-            mapFragment.onResume();
-            mapFragment.getMapAsync(this);
-        }
         mAuth = FirebaseAuth.getInstance();
         currentUserId = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -112,11 +105,42 @@ public class MapsActivity extends Fragment implements
                 child("Group");
         getUserInfo();
         getAllLocation();
+    }
 
-
-        return view;
+    /*
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+                view = inflater.inflate(R.layout.activity_maps, container, false);
+                mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+                SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
+                        .findFragmentById(R.id.map);
+                mapFragment.getMapAsync(this);
+                //Auto search box
+        //PlaceAutocompleteFragment autocompleteFragment =
+               // (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(
+                 //       R.id.place_autocomplete_fragment);
+        //autocompleteFragment.setOnPlaceSelectedListener(this);
+                mAuth = FirebaseAuth.getInstance();
+                currentUserId = mAuth.getCurrentUser().getUid();
+                UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+                GroupLocationRef = FirebaseDatabase.getInstance().getReference().child("GroupsLocation").
+                        child("Group");
+                getUserInfo();
+                getAllLocation();
+                return view;
 
     }
+    */
+    /*
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        SupportMapFragment f = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
+        if (f != null)
+            getFragmentManager().beginTransaction().remove(f).commitAllowingStateLoss();
+    }
+    */
+
 
     private void getAllLocation() {
         GroupLocationRef.addChildEventListener(new ChildEventListener() {
@@ -183,8 +207,8 @@ public class MapsActivity extends Fragment implements
     public void onMapReady(GoogleMap googleMap) {
         buildGoogleApiClient();
         this.googleMap = googleMap;
-        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this.getActivity(),
+        if (ActivityCompat.checkSelfPermission(MapsActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MapsActivity.this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -199,7 +223,7 @@ public class MapsActivity extends Fragment implements
 
     }
     private void buildGoogleApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(this.getContext()).addConnectionCallbacks(this)
+        googleApiClient = new GoogleApiClient.Builder(MapsActivity.this).addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .addApi(Places.GEO_DATA_API)
@@ -277,9 +301,9 @@ public class MapsActivity extends Fragment implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this.getActivity(),
+        if (ActivityCompat.checkSelfPermission(MapsActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this.getActivity(),
+                ActivityCompat.checkSelfPermission(MapsActivity.this,
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -290,7 +314,7 @@ public class MapsActivity extends Fragment implements
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-            locationManager = (LocationManager)this.getActivity().getSystemService(Context.LOCATION_SERVICE);
+            locationManager = (LocationManager)MapsActivity.this.getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String bestProvider = locationManager.getBestProvider(criteria, true);
         Location location = locationManager.getLastKnownLocation(bestProvider);

@@ -9,7 +9,7 @@
     <item
         android:id="@+id/action_alluser"
         android:orderInCategory="100"
-        android:title="Tất cả người dùng"
+        android:title="Tìm bạn bè"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_logout"

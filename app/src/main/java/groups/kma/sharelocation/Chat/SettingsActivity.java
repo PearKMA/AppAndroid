@@ -1,5 +1,6 @@
 package groups.kma.sharelocation.Chat;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
     Button changeStt, changeImg;
     private static final int GALLERY_PICK = 1;
     Bitmap thumb_bitmap;
+    private DatabaseReference mStatusDatabase;
 
     private StorageReference mImagesStorage;
     private ProgressDialog mProgressDialog;
@@ -78,6 +81,7 @@ public class SettingsActivity extends AppCompatActivity {
         String current_uid = mCurrentUser.getUid();
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
         mUserDatabase.keepSynced(true);
+        mStatusDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
 
         mUserDatabase.addValueEventListener(new ValueEventListener() {
             @Override
@@ -129,6 +133,53 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+        changeStt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChangeSttDialog();
+            }
+        });
+    }
+
+    private void showChangeSttDialog() {
+        final Dialog dialog = new Dialog(SettingsActivity.this);
+        dialog.setTitle("Đổi trạng thái");
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_change_stt);
+        Button acpt = dialog.findViewById(R.id.accept_change_stt);
+        Button decl = dialog.findViewById(R.id.decline_change_stt);
+        final EditText editstt = dialog.findViewById(R.id.edit_status);
+        editstt.setText(status.getText());
+        acpt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mProgressDialog = new ProgressDialog(dialog.getContext());
+                mProgressDialog.setTitle("Thay đổi trạng thái");
+                mProgressDialog.setMessage("Đang thay đổi trạng thái");
+                mProgressDialog.show();
+                String edit = editstt.getText().toString();
+                mStatusDatabase.child("status").setValue(edit).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()){
+
+                            mProgressDialog.dismiss();
+                        }else{
+                            Toast.makeText(SettingsActivity.this, "Thay đổi trạng thái thất bại.", Toast.LENGTH_SHORT).show();
+                            mProgressDialog.dismiss();
+                        }
+                    }
+                });
+                dialog.dismiss();
+            }
+        });
+        decl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     @Override
@@ -168,7 +219,6 @@ public class SettingsActivity extends AppCompatActivity {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 final byte[] thumb_byte = baos.toByteArray();
-
                 StorageReference filepath = mImagesStorage.child("profile_images").child(current_user_id + ".jpg");
                 final StorageReference thumb_filepath = mImagesStorage.child("profile_images").child("thumbs").child(current_user_id + ".jpg");
 
@@ -229,18 +279,6 @@ public class SettingsActivity extends AppCompatActivity {
             finish();
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public static String random() {
-        Random generator = new Random();
-        StringBuilder randomStringBuilder = new StringBuilder();
-        int randomLength = generator.nextInt(10);
-        char tempChar;
-        for (int i = 0; i < randomLength; i++) {
-            tempChar = (char) (generator.nextInt(96) + 32);
-            randomStringBuilder.append(tempChar);
-        }
-        return randomStringBuilder.toString();
     }
 
 }

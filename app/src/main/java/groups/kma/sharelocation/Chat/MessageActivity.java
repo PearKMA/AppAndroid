@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -68,8 +70,14 @@ public class MessageActivity extends AppCompatActivity {
     private LinearLayoutManager linearLayoutManager;
     private MessageAdapter messageAdapter;
     private static int Gallery_pick =1;
+    private static final int TOTAL_ITEMS_TO_LOAD = 10;
+    private int mCurrentPage = 1 ;
+    private int itemPos = 0;
+    private String mLastKey = "";
+    private String mPrevKey = "";
     private StorageReference MessageImageStorageRef;
     private ProgressDialog loadingBar;
+    private SwipeRefreshLayout mRefreshLayout;
 
 
 
@@ -102,11 +110,10 @@ public class MessageActivity extends AppCompatActivity {
         userNameTitle = findViewById(R.id.custom_profile_name);
         userLastSeen = findViewById(R.id.custom_user_last_seen);
         userChatProfileImage = findViewById(R.id.custom_profile_image);
-
         SendMessageButton = findViewById(R.id.send_message);
         SelectImageButton = findViewById(R.id.select_image);
         InputMessageText = findViewById(R.id.input_message);
-
+        mRefreshLayout =findViewById(R.id.message_swipe_layout);
         messageAdapter = new MessageAdapter(messagesList);
         userMessageList = findViewById(R.id.chatview);
         linearLayoutManager = new LinearLayoutManager(this);
@@ -127,7 +134,6 @@ public class MessageActivity extends AppCompatActivity {
                 if(online.equals("true")){
                     userLastSeen.setText("Online");
                 }else{
-
                     LastSeenTime getTime = new LastSeenTime();
                     long last_seen = Long.parseLong(online);
                     String lastSeenDisplayTime = getTime.getTimeAgo(last_seen,getApplicationContext()).toString();
@@ -148,6 +154,17 @@ public class MessageActivity extends AppCompatActivity {
                 SendMessage();
             }
         });
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mCurrentPage++;
+                itemPos=0;
+
+                FetchMoreMessages();
+
+            }
+        });
+
         SelectImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -159,6 +176,55 @@ public class MessageActivity extends AppCompatActivity {
         });
 
     }
+
+    private void FetchMoreMessages() {
+        DatabaseReference messageRef = rootRef.child("Messages").child(messageSenderId).child(messageReceiverId);
+        Query messageQuery = messageRef.orderByKey().endAt(mLastKey).limitToLast(10);
+        messageQuery.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Messages messages = dataSnapshot.getValue(Messages.class);
+                String messageKey= dataSnapshot.getKey();
+                if(!mPrevKey.equals(messageKey)){
+                    messagesList.add(itemPos++,messages);
+                }else{
+                    mPrevKey = messageKey;
+                }
+                if(itemPos==1){
+                    mLastKey = messageKey;
+                }
+
+
+                messageAdapter.notifyDataSetChanged();
+                userMessageList.scrollToPosition(messagesList.size()-1);
+                mRefreshLayout.setRefreshing(false);
+                linearLayoutManager.scrollToPositionWithOffset(10,0);
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -216,12 +282,25 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private void FetchMessages() {
-        rootRef.child("Messages").child(messageSenderId).child(messageReceiverId).addChildEventListener(new ChildEventListener() {
+
+        DatabaseReference messageRef = rootRef.child("Messages").child(messageSenderId).child(messageReceiverId);
+        Query messageQuery = messageRef.limitToLast(mCurrentPage * TOTAL_ITEMS_TO_LOAD);
+
+        messageQuery.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Messages messages = dataSnapshot.getValue(Messages.class);
+                itemPos++;
+                if(itemPos==1){
+                    String messageKey= dataSnapshot.getKey();
+                    mLastKey = messageKey;
+                    mPrevKey = messageKey;
+                }
                 messagesList.add(messages);
                 messageAdapter.notifyDataSetChanged();
+                userMessageList.scrollToPosition(messagesList.size()-1);
+                mRefreshLayout.setRefreshing(false);
+
             }
 
             @Override
@@ -282,4 +361,6 @@ public class MessageActivity extends AppCompatActivity {
 
         }
     }
+
+
 }

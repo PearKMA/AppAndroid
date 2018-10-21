@@ -53,19 +53,20 @@
             android:name=".LoginAction.ActivityUser"
             android:label="@string/title_activity_user"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity android:name=".Chat.SettingsActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-        <activity android:name=".Chat.StatusActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Chat.SettingsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Chat.StatusActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
-
-        <activity android:name=".Chat.AllUsersActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".Chat.ProfileActivity"
+        <activity
+            android:name=".Chat.AllUsersActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Chat.ProfileActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="groups.kma.sharelocation_TARGET_NOTIFICATION" />
@@ -73,11 +74,20 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".Chat.MessageActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            >
-
-        </activity>
+        <activity
+            android:name=".Chat.MessageActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".NguoiThan.NguoiThanActivity"
+            android:label="@string/title_activity_nguoi_than"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".VungAnToan.VungAnToanActivity"
+            android:label="@string/title_activity_vung_an_toan"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MapAction.MapsActivity"
+            android:label="@string/title_activity_maps"></activity>
     </application>
 
 </manifest>

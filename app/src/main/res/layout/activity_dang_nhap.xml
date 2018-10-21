@@ -38,7 +38,7 @@
                     android:layout_marginTop="20dp"
                     android:background="@drawable/login_action_circle"
                     android:padding="10dp"
-
+                    android:src="@drawable/img_register"
                     android:tint="@color/white" />
 
                 <TextView

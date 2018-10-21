@@ -1,5 +1,5 @@
 package groups.kma.sharelocation.Chat;
-
+// lop Chats cho ChatFragment
 public class Chats {
     private String user_status;
 
