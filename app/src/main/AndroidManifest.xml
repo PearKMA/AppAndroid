@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme">
         <service android:name=".Chat.FirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -28,7 +28,7 @@
         <activity
             android:name=".LoginAction.ActivityDangNhap"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -52,22 +52,22 @@
         <activity
             android:name=".LoginAction.ActivityUser"
             android:label="@string/title_activity_user"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".Chat.SettingsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".Chat.StatusActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".Chat.AllUsersActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".Chat.ProfileActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="groups.kma.sharelocation_TARGET_NOTIFICATION" />
 
@@ -76,16 +76,17 @@
         </activity>
         <activity
             android:name=".Chat.MessageActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".NguoiThan.NguoiThanActivity"
             android:label="@string/title_activity_nguoi_than"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".VungAnToan.VungAnToanActivity"
             android:label="@string/title_activity_vung_an_toan"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
+            android:theme="@style/AppTheme"
             android:name=".MapAction.MapsActivity"
             android:label="@string/title_activity_maps"></activity>
     </application>
