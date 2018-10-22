@@ -58,6 +58,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import groups.kma.sharelocation.R;
 
@@ -91,6 +93,9 @@ public class MapsActivity extends FragmentActivity implements
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, GroupLocationRef, GroupLocationKeyRef;
     String locationKey;
+
+    Timer timer=null;
+    TimerTask timerTask=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,34 +246,11 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onLocationChanged(Location location) {
+    public void onLocationChanged(final Location location) {
 
-            double latitude = location.getLatitude();
-            double longtitude = location.getLongitude();
-
-            locationKey=GroupLocationRef.push().getKey();
-            Calendar ccalForDate=Calendar.getInstance();
-            SimpleDateFormat currentDateFormat = new SimpleDateFormat("MM/dd");
-            currentDate=currentDateFormat.format(ccalForDate.getTime());
-            Calendar ccalForDTime=Calendar.getInstance();
-            SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
-            currentTime=currentTimeFormat.format(ccalForDTime.getTime());
-
-            HashMap<String,Object> groupLocationKey=new HashMap<>();
-            GroupLocationRef.updateChildren(groupLocationKey);
-
-            GroupLocationKeyRef=GroupLocationRef.child(locationKey);
-
-            HashMap<String,Object> locationInfoMap=new HashMap<>();
-            locationInfoMap.put("name",currentUserName);
-            locationInfoMap.put("latitude",latitude);
-            locationInfoMap.put("longtitude",longtitude);
-            locationInfoMap.put("date",currentDate);
-            locationInfoMap.put("time",currentTime);
-
-            GroupLocationKeyRef.updateChildren(locationInfoMap);
             myLocation(location);
     }
+
 
     private void DisplayLocations(DataSnapshot dataSnapshot) {
         Iterator iterator=dataSnapshot.getChildren().iterator();
@@ -328,6 +310,7 @@ public class MapsActivity extends FragmentActivity implements
         Location location = locationManager.getLastKnownLocation(bestProvider);
         if (location != null) {
             onLocationChanged(location);
+            guiViTri(location);
         }
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
                 0, this);
@@ -341,6 +324,41 @@ public class MapsActivity extends FragmentActivity implements
         googleMap.addMarker(new MarkerOptions().position(latLng));
         googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+    }
+
+    private void guiViTri(final Location location) {
+        timerTask=new TimerTask() {
+            @Override
+            public void run() {
+                double latitude = location.getLatitude();
+                double longtitude = location.getLongitude();
+
+                locationKey=GroupLocationRef.push().getKey();
+                Calendar ccalForDate=Calendar.getInstance();
+                SimpleDateFormat currentDateFormat = new SimpleDateFormat("MM/dd");
+                currentDate=currentDateFormat.format(ccalForDate.getTime());
+                Calendar ccalForDTime=Calendar.getInstance();
+                SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
+                currentTime=currentTimeFormat.format(ccalForDTime.getTime());
+
+                HashMap<String,Object> groupLocationKey=new HashMap<>();
+                GroupLocationRef.updateChildren(groupLocationKey);
+
+                GroupLocationKeyRef=GroupLocationRef.child(locationKey);
+
+                HashMap<String,Object> locationInfoMap=new HashMap<>();
+                locationInfoMap.put("name",currentUserName);
+                locationInfoMap.put("latitude",latitude);
+                locationInfoMap.put("longtitude",longtitude);
+                locationInfoMap.put("date",currentDate);
+                locationInfoMap.put("time",currentTime);
+
+                GroupLocationKeyRef.updateChildren(locationInfoMap);
+            }
+        };
+        timer=new Timer();
+        timer.schedule(timerTask,0,3*1000*60);
     }
 
     @Override
