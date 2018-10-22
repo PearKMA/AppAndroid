@@ -29,4 +29,5 @@
     </string-array>
     <string name="title_activity_nguoi_than">NguoiThanActivity</string>
     <string name="title_activity_vung_an_toan">VungAnToanActivity</string>
+    <string name="title_yeucau">Bạn cần phải có mã mời \n từ người quản trị nhóm \n để có thể tham gia nhóm</string>
 </resources>

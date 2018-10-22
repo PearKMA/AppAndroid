@@ -191,8 +191,6 @@ public class MapsActivity extends FragmentActivity implements
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     currentUserName = dataSnapshot.child("userName").getValue().toString();
-
-
                 }
             }
 

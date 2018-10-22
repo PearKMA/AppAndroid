@@ -13,5 +13,32 @@
         android:layout_height="wrap_content">
 
     </android.support.v7.widget.Toolbar>
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/mauDen"
+        android:layout_gravity="center"
+        android:text="Nhập mã mời để tham gia nhóm"/>
+    <EditText
+        android:id="@+id/NhapMaMoi"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btnThamGia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tham Gia"
+        android:layout_gravity="center"/>
+    <TextView
+        android:textSize="16dp"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:text="@string/title_yeucau"
+        android:layout_height="wrap_content" />
 </LinearLayout>
