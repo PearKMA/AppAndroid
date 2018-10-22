@@ -61,7 +61,6 @@ import groups.kma.sharelocation.Chat.ChatActivity;
 import groups.kma.sharelocation.Chat.SettingsActivity;
 import groups.kma.sharelocation.LienKetAction.LienKetActivity;
 import groups.kma.sharelocation.LoginAction.ActivityDangNhap;
-import groups.kma.sharelocation.LoginAction.ActivityUser;
 import groups.kma.sharelocation.MapAction.MapsActivity;
 import groups.kma.sharelocation.NguoiThan.NguoiThanActivity;
 import groups.kma.sharelocation.VungAnToan.VungAnToanActivity;
@@ -73,7 +72,7 @@ public class MainActivity extends AppCompatActivity
         //GoogleApiClient.OnConnectionFailedListener, LocationListener
    {
     TextView navUsername, navEmail;
-    ImageView avatar;
+    ImageView avatar,imageviewcanhbao;
     private View headerView;
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
@@ -108,9 +107,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         headerView = navigationView.getHeaderView(0);
-        ThongTinUser();
         //get username
         navEmail = headerView.findViewById(R.id.tvEmail);
+        imageviewcanhbao = headerView.findViewById(R.id.imageViewCanhBao);
         navUsername = headerView.findViewById(R.id.tvUsername);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -139,9 +138,41 @@ public class MainActivity extends AppCompatActivity
                 }
             });
         }
+        imageviewcanhbao.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, "Gửi cảnh báo!", Toast.LENGTH_SHORT).show();
+                GuiCanhBao();
+            }
+        });
+
+        setTitle("Liên kết người thân");
+        LienKetActivity lienKetActivity = new LienKetActivity();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.contentX, lienKetActivity).commit();
         //addControls();
     }
 
+       private void GuiCanhBao() {
+           AlertDialog.Builder builder = new AlertDialog.Builder(this);
+           builder.setTitle("Gửi báo động");
+           builder.setMessage("Bạn có muốn gửi báo động không không?");
+           builder.setCancelable(false);
+           builder.setPositiveButton("Hủy bỏ", new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialogInterface, int i) {
+                   dialogInterface.dismiss();
+               }
+           });
+           builder.setNegativeButton("Đồng ý", new DialogInterface.OnClickListener() {
+               @Override
+               public void onClick(DialogInterface dialogInterface, int i) {
+                   dialogInterface.dismiss();
+               }
+           });
+           AlertDialog alertDialog = builder.create();
+           alertDialog.show();
+       }
 
 
        @Override
@@ -165,15 +196,6 @@ public class MainActivity extends AppCompatActivity
             userReference.child("online").setValue(ServerValue.TIMESTAMP);
         }
 
-    }
-
-    public void ThongTinUser() {
-        headerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, ActivityUser.class));
-            }
-        });
     }
 
     @Override

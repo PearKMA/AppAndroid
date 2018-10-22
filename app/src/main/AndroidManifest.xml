@@ -50,14 +50,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".LoginAction.ActivityUser"
-            android:label="@string/title_activity_user"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".Chat.SettingsActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".Chat.StatusActivity"
             android:theme="@style/AppTheme" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
@@ -86,9 +79,10 @@
             android:label="@string/title_activity_vung_an_toan"
             android:theme="@style/AppTheme" />
         <activity
-            android:theme="@style/AppTheme"
             android:name=".MapAction.MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
+        <activity android:name=".LienKetAction.ThamGiaActivity"></activity>
     </application>
 
 </manifest>
