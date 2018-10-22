@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.contentX, lienKetActivity).commit();
         } else if (id == R.id.nav_nguoithan) {
-            setTitle("Người thân");
+            setTitle("Nhóm vị trí");
             NguoiThanActivity nguoiThanActivity = new NguoiThanActivity();
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.contentX, nguoiThanActivity).commit();
@@ -305,6 +305,9 @@ public class MainActivity extends AppCompatActivity
             MapsActivity mapsActivity = new MapsActivity();
             FragmentManager fragmentManager = getSupportFragmentManager();
             //fragmentManager.beginTransaction().replace(R.id.contentX, mapsActivity).commit();
+        } else if (id == R.id.nav_alert) {
+            setTitle("Báo động");
+            //Đẩy notification báo động
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

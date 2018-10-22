@@ -11,11 +11,15 @@
         <item
             android:id="@+id/nav_nguoithan"
             android:icon="@drawable/ic_menu_tc_family_24"
-            android:title="Người thân" />
+            android:title="Nhóm vị trí" />
         <item
             android:id="@+id/nav_dinhvi"
             android:icon="@drawable/ic_menu_tc_location_24"
-            android:title="Vị trí" />
+            android:title="Bản đồ" />
+        <item
+            android:id="@+id/nav_vungantoan"
+            android:icon="@drawable/ic_menu_tc_location_sheild_24"
+            android:title="Vùng an toàn" />
     </group>
 
     <item android:title="Tiên ích">
@@ -25,9 +29,9 @@
                 android:icon="@drawable/ic_menu_tc_messes_24"
                 android:title="Gửi tin"/>
             <item
-                android:id="@+id/nav_vungantoan"
-                android:icon="@drawable/ic_menu_tc_location_sheild_24"
-                android:title="Vùng an toàn" />
+                android:id="@+id/nav_alert"
+                android:icon="@drawable/alert"
+                android:title="Báo động"/>
             <item
                 android:id="@+id/nav_caidat"
                 android:icon="@drawable/ic_menu_manage"
