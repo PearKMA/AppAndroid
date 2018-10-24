@@ -63,6 +63,7 @@ import groups.kma.sharelocation.LienKetAction.LienKetActivity;
 import groups.kma.sharelocation.LoginAction.ActivityDangNhap;
 import groups.kma.sharelocation.MapAction.MapsActivity;
 import groups.kma.sharelocation.NguoiThan.NguoiThanActivity;
+import groups.kma.sharelocation.VungAnToan.BaoDongActivity;
 import groups.kma.sharelocation.VungAnToan.VungAnToanActivity;
 import groups.kma.sharelocation.model.Users;
 
@@ -242,34 +243,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        //FragmentManager fragmentManager = getSupportFragmentManager();
-        //FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-    /*
-        Fragment fragment = null;
-        switch(id){
-            case R.id.nav_lienket: fragment = new LienKetActivity();
-                                    replaceFragment(fragment);
-            break;
-            case R.id.nav_nguoithan: fragment = new NguoiThanActivity();
-            break;
-            case R.id.nav_dinhvi: fragment = new MapsActivity();
-            break;
-            case R.id.nav_guitin: fragment = new ChatActivity();
-            break;
-            case R.id.nav_vungantoan: fragment = new VungAnToanActivity();
-            break;
-            case R.id.nav_caidat: fragment = new VungAnToanActivity();
-            break;
-            case R.id.nav_huongdan: fragment = new VungAnToanActivity();
-            break;
-        }
-
-        if (fragment != null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.contentX, fragment);
-            ft.commit();
-        }
-    */
 
         if (id == R.id.nav_lienket) {
             setTitle("Liên kết người thân");
@@ -296,46 +269,23 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.contentX, vungAnToanActivity).commit();
         } else if (id == R.id.nav_caidat) {
-            setTitle("Cài đặt");
-            MapsActivity mapsActivity = new MapsActivity();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            //fragmentManager.beginTransaction().replace(R.id.contentX, mapsActivity).commit();
-        } else if (id == R.id.nav_huongdan) {
-            setTitle("Hướng dẫn sử dụng");
-            MapsActivity mapsActivity = new MapsActivity();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            //fragmentManager.beginTransaction().replace(R.id.contentX, mapsActivity).commit();
-        } else if (id == R.id.nav_alert) {
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        }
+         else if (id == R.id.nav_alert) {
             setTitle("Báo động");
-            //Đẩy notification báo động
+            BaoDongActivity bdActivity = new BaoDongActivity();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.contentX, bdActivity).commit();
+        }else if(id == R.id.nav_timbanbe){
+            startActivity(new Intent(MainActivity.this, AllUsersActivity.class));
+        }else if(id ==R.id.nav_logout){
+            dialogSetup();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    /*
-       private void replaceFragment(Fragment newFragment) {
-           FragmentTransaction trasection = getFragmentManager().beginTransaction();
-           if(!newFragment.isAdded()){
-               try{
-                   //FragmentTransaction trasection =
-                   getFragmentManager().beginTransaction();
-                   trasection.replace(R.id.contentX, newFragment);
-                   trasection.addToBackStack(null);
-                   trasection.commit();
-
-               }catch (Exception e) {
-                   // TODO: handle exception
-                   //AppConstants.printLog(e.getMessage());
-
-               }
-           }else
-               trasection.show(newFragment);
-
-       }
-       }
-    */
        //log out
     private void dialogSetup() {
         AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
@@ -366,128 +316,4 @@ public class MainActivity extends AppCompatActivity
         alert.show();
     }
 
-    //start map
-//    private void addControls() {
-//        SupportMapFragment mapFragment =
-//                (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
-//
-//        PlaceAutocompleteFragment autocompleteFragment =
-//                (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(
-//                        R.id.place_autocomplete_fragment);
-//        autocompleteFragment.setOnPlaceSelectedListener(this);
-//    }
-/*
-
-    @Override
-    public void onPlaceSelected(Place place) {
-        // remove old marker when add new marker
-        if (marker != null) marker.remove();
-        LatLng myLatLng = place.getLatLng();
-        marker = googleMap.addMarker(
-                new MarkerOptions().position(myLatLng).title(String.valueOf(place.getName())));
-        googleMap.animateCamera(CameraUpdateFactory.newLatLng(myLatLng));
-    }
-
-
-    @Override
-    public void onError(Status status) {
-
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        buildGoogleApiClient();
-        this.googleMap = googleMap;
-        // Add icon my location
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        this.googleMap.setMyLocationEnabled(true);
-    }
-
-    private void buildGoogleApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(this).addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .build();
-        googleApiClient.connect();
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        String bestProvider = locationManager.getBestProvider(criteria, true);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(bestProvider);
-        if (location != null) {
-            myLocation(location);
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-                0, this);
-
-    }
-
-    private void myLocation(Location location) {
-        double latitude = location.getLatitude();
-        double longitude = location.getLongitude();
-        LatLng latLng = new LatLng(latitude, longitude);
-        googleMap.addMarker(new MarkerOptions().position(latLng));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        googleMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }
-
-    */
 }

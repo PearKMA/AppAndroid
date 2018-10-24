@@ -82,7 +82,8 @@
             android:name=".MapAction.MapsActivity"
             android:label="@string/title_activity_maps"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-        <activity android:name=".LienKetAction.ThamGiaActivity"></activity>
+        <activity android:name=".LienKetAction.ThamGiaActivity" />
+        <activity android:name=".VungAnToan.BaoDongActivity"></activity>
     </application>
 
 </manifest>

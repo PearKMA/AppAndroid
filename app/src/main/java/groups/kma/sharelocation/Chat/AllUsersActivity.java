@@ -37,7 +37,7 @@ public class AllUsersActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Các người dùng hiện tại");
+        getSupportActionBar().setTitle("Tìm bạn bè");
         search_txt = findViewById(R.id.search_text);
         search_button = findViewById(R.id.search_btn);
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");

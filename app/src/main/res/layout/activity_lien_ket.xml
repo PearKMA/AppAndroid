@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".LienKetAction.LienKetActivity">
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,11 +25,17 @@
         <Button
             android:id="@+id/btnTaoNhom"
             android:layout_width="0dp"
+            android:layout_marginHorizontal="10dp"
+            android:textColor="@color/mauTrang"
+            android:background="@drawable/shape2"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Tạo nhóm" />
 
         <Button
+            android:layout_marginHorizontal="10dp"
+            android:textColor="@color/mauTrang"
+            android:background="@drawable/shape2"
             android:id="@+id/btnThamGiaNhom"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -39,6 +44,7 @@
     </LinearLayout>
 
     <ImageView
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"

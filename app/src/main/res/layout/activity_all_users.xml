@@ -33,7 +33,7 @@
         android:textColorHint="@color/mauTrang"
         android:textColor="@color/mauTrang"
         android:background="@drawable/search_text_background"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
     <ImageButton
         android:id="@+id/search_btn"
         android:layout_width="50dp"

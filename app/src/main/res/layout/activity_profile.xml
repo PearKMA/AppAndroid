@@ -5,51 +5,69 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Chat.ProfileActivity">
+
     <ImageView
         android:id="@+id/imgProfile"
         android:layout_width="match_parent"
-        android:src="@drawable/profileimg"
-        android:layout_height="220dp" />
-<LinearLayout
-    android:layout_below="@id/imgProfile"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <TextView
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:id="@+id/dnProfile"
-        android:textSize="24sp"
-        android:textColor="@color/mauDen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Display Name" />
-    <TextView
-        android:id="@+id/stProfile"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="20dp"
-        android:text="Status"/>
-    <Button
-        android:id="@+id/ketban"
-        android:layout_marginTop="50dp"
-        android:layout_width="130dp"
-        android:text="Kết bạn"
-        android:textSize="17dp"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content" />
-    <Button
-        android:id="@+id/huyketban"
-        android:layout_marginTop="10dp"
-        android:layout_width="130dp"
-        android:text="Hủy kết bạn"
-        android:textSize="17dp"
-        android:layout_gravity="center"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="200dp"
+        android:src="@drawable/profileimg" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/imgProfile"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/dnProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:text="Display Name"
+            android:textColor="@color/mauDen"
+            android:textSize="24sp" />
+
+        <TextView
+            android:id="@+id/stProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginTop="10dp"
+            android:text="Status"
+            android:textSize="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/ketban"
+                android:layout_width="130dp"
+                android:layout_marginHorizontal="30dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/shape2"
+                android:text="Kết bạn"
+                android:textColor="@color/mauTrang"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/huyketban"
+                android:layout_width="130dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/shape"
+                android:text="Hủy kết bạn"
+                android:textColor="@color/mauTrang"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

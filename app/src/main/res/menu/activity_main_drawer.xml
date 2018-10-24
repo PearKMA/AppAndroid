@@ -13,6 +13,10 @@
             android:icon="@drawable/ic_menu_tc_family_24"
             android:title="Nhóm vị trí" />
         <item
+            android:id="@+id/nav_guitin"
+            android:icon="@drawable/ic_menu_tc_messes_24"
+            android:title="Gửi tin"/>
+        <item
             android:id="@+id/nav_dinhvi"
             android:icon="@drawable/ic_menu_tc_location_24"
             android:title="Bản đồ" />
@@ -25,9 +29,9 @@
     <item android:title="Tiên ích">
         <menu >
             <item
-                android:id="@+id/nav_guitin"
-                android:icon="@drawable/ic_menu_tc_messes_24"
-                android:title="Gửi tin"/>
+                android:id="@+id/nav_timbanbe"
+                android:icon="@drawable/ic_menu_tc_family_24"
+                android:title="Tìm bạn bè" />
             <item
                 android:id="@+id/nav_alert"
                 android:icon="@drawable/alert"
@@ -37,9 +41,10 @@
                 android:icon="@drawable/ic_menu_manage"
                 android:title="Cài đặt" />
             <item
-                android:id="@+id/nav_huongdan"
-                android:icon="@drawable/ic_menu_tc_tut_24"
-                android:title="Hướng dẫn sử dụng" />
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout"
+                android:title="Đăng xuất" />
+
         </menu>
     </item>
 

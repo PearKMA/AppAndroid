@@ -23,13 +23,13 @@
 
     <TextView
         android:layout_below="@+id/settingImage"
-        android:textSize="30dp"
+        android:textSize="22sp"
         android:id="@+id/settingDisplayname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="242dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/mauDen"
         android:text="Display Name" />
 
     <TextView
@@ -43,8 +43,9 @@
         android:layout_centerHorizontal="true"
         android:text="Hello Friend, Nice to meet you."
         android:textSize="20dp"/>
-
     <Button
+        android:background="@drawable/shape2"
+        android:textColor="@color/mauTrang"
         android:layout_below="@id/settingStatus"
         android:id="@+id/button2"
         android:layout_width="133dp"
@@ -52,11 +53,13 @@
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
         android:text="Đổi ảnh" />
-
     <Button
         android:id="@+id/button3"
         android:layout_below="@id/button2"
         android:layout_width="133dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shape2"
+        android:textColor="@color/mauTrang"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="Đổi trạng thái" />

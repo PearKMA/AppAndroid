@@ -1,25 +1,21 @@
 package groups.kma.sharelocation.VungAnToan;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import groups.kma.sharelocation.R;
 
-public class VungAnToanActivity extends Fragment {
+public class BaoDongActivity extends Fragment {
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_vung_an_toan, container, false);
+        View view = inflater.inflate(R.layout.activity_bao_dong, container, false);
         return view;
     }
 }

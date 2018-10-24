@@ -30,6 +30,8 @@
         android:layout_height="wrap_content" />
     <Button
         android:id="@+id/btnThamGia"
+        android:background="@drawable/shape2"
+        android:textColor="@color/mauTrang"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Tham Gia"
