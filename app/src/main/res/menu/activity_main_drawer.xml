@@ -10,16 +10,16 @@
             android:title="Liên kết người thân" />
         <item
             android:id="@+id/nav_nguoithan"
-            android:icon="@drawable/ic_menu_tc_family_24"
+            android:icon="@drawable/ic_menu_tc_location_24"
             android:title="Nhóm vị trí" />
         <item
             android:id="@+id/nav_guitin"
             android:icon="@drawable/ic_menu_tc_messes_24"
             android:title="Gửi tin"/>
         <item
-            android:id="@+id/nav_dinhvi"
-            android:icon="@drawable/ic_menu_tc_location_24"
-            android:title="Bản đồ" />
+            android:id="@+id/nav_quanlynhom"
+            android:icon="@drawable/ic_menu_tc_family_24"
+            android:title="Quản lý nhóm" />
         <item
             android:id="@+id/nav_vungantoan"
             android:icon="@drawable/ic_menu_tc_location_sheild_24"

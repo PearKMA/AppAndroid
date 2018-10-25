@@ -86,7 +86,8 @@
         <activity android:name=".VungAnToan.BaoDongActivity" />
         <activity
             android:name=".NguoiThan.NhomNguoiThanMapActivity"
-            android:label="@string/title_activity_nhom_nguoi_than_map"></activity>
+            android:label="@string/title_activity_nhom_nguoi_than_map" />
+        <activity android:name=".NguoiThan.QuanLyNhomActivity"></activity>
     </application>
 
 </manifest>

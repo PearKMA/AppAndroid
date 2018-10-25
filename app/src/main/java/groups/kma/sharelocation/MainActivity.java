@@ -228,14 +228,8 @@ public class MainActivity extends AppCompatActivity
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.contentX, lienKetActivity).commit();
         } else if (id == R.id.nav_nguoithan) {
-//            setTitle("Nhóm vị trí");
-//            NhomNguoiThan nhomNguoiThan = new NhomNguoiThan();
-//            FragmentManager fragmentManager = getSupportFragmentManager();
-           // fragmentManager.beginTransaction().replace(R.id.contentX, nhomNguoiThan).commit();
             startActivity(new Intent(MainActivity.this, NhomNguoiThanMapActivity.class));
-        } else if (id == R.id.nav_dinhvi) {
-            //setTitle("Vị trí");
-            //MapsActivity mapsActivity = new MapsActivity();
+        } else if (id == R.id.nav_quanlynhom) {
             startActivity(new Intent(MainActivity.this,MapsActivity.class));
         } else if (id == R.id.nav_guitin) {
             setTitle("Gửi tin");
