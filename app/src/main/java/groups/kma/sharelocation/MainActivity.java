@@ -1,13 +1,19 @@
 package groups.kma.sharelocation;
 
+import android.app.Activity;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.telephony.SmsManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -55,7 +61,7 @@ public class MainActivity extends AppCompatActivity
     private View headerView;
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
-    FirebaseUser mCurrentUser;
+    private FirebaseUser mCurrentUser;
     private DatabaseReference userReference;
     private SharedPreferences preferences;
     private Boolean saveLogin;
@@ -147,10 +153,35 @@ public class MainActivity extends AppCompatActivity
                @Override
                public void onClick(DialogInterface dialogInterface, int i) {
                    dialogInterface.dismiss();
+                   sendSmSAlert();
                }
            });
            AlertDialog alertDialog = builder.create();
            alertDialog.show();
+       }
+
+       private void sendSmSAlert() {
+           final SmsManager smsManager=SmsManager.getDefault();
+           Intent intent=new Intent("ACTION_MSG_SEND");
+           final PendingIntent pendingIntent=PendingIntent.getBroadcast(this,0,intent,0);
+           registerReceiver(new BroadcastReceiver() {
+               @Override
+               public void onReceive(Context context, Intent intent) {
+                   int result=getResultCode();
+                   String msg="Gửi thành công!";
+                   if (result!=Activity.RESULT_OK)
+                   {
+                       msg="Có lỗi xảy ra, vui lòng thử lại!";
+                   }
+                   Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
+               }
+
+           },new IntentFilter("ACTION_MSG_SEND"));
+           String mess1="User: "+MapsActivity.name+" đã gửi tín hiệu khẩn cấp tại vị trí "+
+                   MapsActivity.locationUser;
+           String mess=mess1+" lúc "+MapsActivity.atTime;
+           smsManager.sendTextMessage(BaoDongActivity.smsPhone,null,mess,pendingIntent,
+                   null);
        }
 
 
