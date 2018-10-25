@@ -93,7 +93,7 @@ public class MapsActivity extends FragmentActivity implements
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, GroupLocationRef, GroupLocationKeyRef;
     String locationKey;
-
+    public  static String name,locationUser,atTime;
     Timer timer=null;
     TimerTask timerTask=null;
 
@@ -294,7 +294,7 @@ public class MapsActivity extends FragmentActivity implements
 
                 locationKey=GroupLocationRef.push().getKey();
                 Calendar ccalForDate=Calendar.getInstance();
-                SimpleDateFormat currentDateFormat = new SimpleDateFormat("MM/dd");
+                SimpleDateFormat currentDateFormat = new SimpleDateFormat("dd/MM");
                 currentDate=currentDateFormat.format(ccalForDate.getTime());
                 Calendar ccalForDTime=Calendar.getInstance();
                 SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
@@ -313,6 +313,9 @@ public class MapsActivity extends FragmentActivity implements
                 locationInfoMap.put("time",currentTime);
 
                 GroupLocationKeyRef.updateChildren(locationInfoMap);
+                name=currentUserName;
+                locationUser =String.valueOf(latitude)+","+String.valueOf(longtitude);
+                atTime=currentTime +" "+currentDate;
             }
         };
         timer=new Timer();
