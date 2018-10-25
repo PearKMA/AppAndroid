@@ -76,6 +76,11 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
     private LocationManager locationManager;
     private DatabaseReference GroupLocationKeyRef;
     private String currentDate, currentTime, currentUserName;
+//    private String name2="";
+//    private String date2="";
+//    private String latitude2 = "";
+//    private String longtitude2 = "";
+//    private String time2="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +128,7 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
                         }
                         mMap.clear();
                         // action
-                        Toast.makeText(NhomNguoiThanMapActivity.this,"Nhóm "+ xx.getName(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(NhomNguoiThanMapActivity.this, "Nhóm " + xx.getName(), Toast.LENGTH_SHORT).show();
                         GetMemBerGroup(xx.getKey());
                     }
 
@@ -149,7 +154,8 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
                                         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
-                                                GroupLocationKeyRef.child("LocationUsers").child(keyid).child("Info").addValueEventListener(new ValueEventListener() {
+
+                                                GroupLocationKeyRef.child("LocationUsers").child(keyid).child("Info").addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
                                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                                         if (dataSnapshot.exists()) {
@@ -159,7 +165,7 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
                                                             String longtitude2 = dataSnapshot.child("longtitude").getValue().toString();
                                                             String time2 = dataSnapshot.child("time").getValue().toString();
                                                             //marker
-                                                            LatLng here = new LatLng(Double.parseDouble(latitude2),Double.parseDouble(longtitude2));
+                                                            LatLng here = new LatLng(Double.parseDouble(latitude2), Double.parseDouble(longtitude2));
                                                             //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in VietNam"));
                                                             mMap.clear();
                                                             mMap.moveCamera(CameraUpdateFactory.newLatLng(here));
@@ -167,8 +173,9 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
                                                             currentLocationMarker = mMap.addMarker(new MarkerOptions().position(here)
                                                                     .title(name2).visible(true)
                                                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                                                                    .snippet(name2+" đã ở đây vào lúc "+time2+" ngày "+date2));
+                                                                    .snippet(name2 + " đã ở đây vào lúc " + time2 + " ngày " + date2));
                                                             currentLocationMarker.showInfoWindow();
+
                                                         }
                                                     }
 
@@ -177,6 +184,10 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
 
                                                     }
                                                 });
+                                                //
+
+
+
 
                                             }
                                         });
@@ -247,7 +258,7 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
             myLocation(location);
         }
         //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,this);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 10,this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
     }
 
 
@@ -297,7 +308,7 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
         Calendar ccalForDTime = Calendar.getInstance();
         SimpleDateFormat currentTimeFormat = new SimpleDateFormat("hh:mm a");
         currentTime = currentTimeFormat.format(ccalForDTime.getTime());
-        String xMap = "LocationUsers/"+uID+"/Info";
+        String xMap = "LocationUsers/" + uID + "/Info";
         //DatabaseReference xMap = GroupLocationKeyRef.child("LocationUsers").child(uID);
 
         Map locationInfoMap = new HashMap();
@@ -308,16 +319,15 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
         locationInfoMap.put("time", currentTime);
 
         Map locationDetails = new HashMap();
-        locationDetails.put(xMap,locationInfoMap);
+        locationDetails.put(xMap, locationInfoMap);
         rootRef.updateChildren(locationDetails, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if(databaseError!=null){
-                    Log.d("Chat_Log",databaseError.getMessage().toString());
+                if (databaseError != null) {
+                    Log.d("Chat_Log", databaseError.getMessage().toString());
                 }
             }
         });
-
 
 
     }
