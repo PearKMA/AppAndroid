@@ -138,7 +138,7 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
                                 //viewHolder.setDate(model.getDate());
                                 final String list_user_id = getRef(position).getKey();
                                 mUserDatabase.child(list_user_id).addValueEventListener(new ValueEventListener() {
-                                    //helo
+                                    //helo world
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
                                         final String keyid = dataSnapshot.getKey().toString();
