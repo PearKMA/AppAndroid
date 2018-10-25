@@ -46,7 +46,7 @@ public class SpinnerGroupAdapter extends ArrayAdapter<SpinnerGroup> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView view = new TextView(context);
-        view.setTextColor(Color.GREEN);
+        view.setTextColor(Color.WHITE);
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
         view.setGravity(Gravity.CENTER);
         view.setText(groupList.get(position).getName());
@@ -60,10 +60,10 @@ public class SpinnerGroupAdapter extends ArrayAdapter<SpinnerGroup> {
     public View getDropDownView(int position, View convertView,
                                 ViewGroup parent) {
         TextView view = new TextView(context);
-        view.setTextColor(Color.GREEN);
+        view.setTextColor(Color.BLACK);
         view.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f);
         view.setText(groupList.get(position).getName());
-        view.setHeight(60);
+        view.setHeight(100);
 
         return view;
     }

@@ -121,6 +121,7 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
                         if (null != currentLocationMarker) {
                             currentLocationMarker.remove();
                         }
+                        mMap.clear();
                         // action
                         Toast.makeText(NhomNguoiThanMapActivity.this,"Nhóm "+ xx.getName(), Toast.LENGTH_SHORT).show();
                         GetMemBerGroup(xx.getKey());
@@ -159,11 +160,13 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
                                                             //marker
                                                             LatLng here = new LatLng(Double.parseDouble(latitude2),Double.parseDouble(longtitude2));
                                                             //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in VietNam"));
+                                                            mMap.clear();
                                                             mMap.moveCamera(CameraUpdateFactory.newLatLng(here));
+                                                            mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
                                                             currentLocationMarker = mMap.addMarker(new MarkerOptions().position(here)
                                                                     .title(name2).visible(true)
                                                                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                                                                    .snippet(name2+" đã ở đây vào lúc "+time2+" ngày"+date2));
+                                                                    .snippet(name2+" đã ở đây vào lúc "+time2+" ngày "+date2));
                                                             currentLocationMarker.showInfoWindow();
                                                         }
                                                     }
@@ -228,19 +231,22 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager = (LocationManager) NhomNguoiThanMapActivity.this.getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String bestProvider = locationManager.getBestProvider(criteria, true);
         Location location = locationManager.getLastKnownLocation(bestProvider);
+        //Location locationx = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (location != null) {
+            Toast.makeText(this, "Location khong null", Toast.LENGTH_SHORT).show();
             if (null != currentLocationMarker) {
                 currentLocationMarker.remove();
             }
+            mMap.clear();
             onLocationChanged(location);
-            myLocationMove(location);
-            GuiViTri(location);
+            myLocation(location);
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, (LocationListener) this);
+        //locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 10,this);
     }
 
 
@@ -256,6 +262,10 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
 
     @Override
     public void onLocationChanged(Location location) {
+        if (null != currentLocationMarker) {
+            currentLocationMarker.remove();
+        }
+        mMap.clear();
         myLocation(location);
         GuiViTri(location);
     }
@@ -274,6 +284,7 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
     public void onProviderDisabled(String s) {
 
     }
+
 
     private void GuiViTri(Location location) {
         double latitude = location.getLatitude();
@@ -316,7 +327,6 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
         LatLng latLng = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(latLng));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in VietNam"));
         currentLocationMarker = mMap.addMarker(new MarkerOptions().position(
                 new LatLng(latitude, longitude))
                 .title("Vị trí hiện tại của bạn").visible(true)
@@ -331,7 +341,7 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
         LatLng latLng = new LatLng(latitude, longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         mMap.addMarker(new MarkerOptions().position(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in VietNam"));
         currentLocationMarker = mMap.addMarker(new MarkerOptions().position(
                 new LatLng(latitude, longitude))
@@ -388,15 +398,4 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
         googleApiClient.connect();
     }
 
-    public void moveMove(double lat, double Lng) {
-        LatLng here = new LatLng(lat, Lng);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in VietNam"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(here));
-        currentLocationMarker = mMap.addMarker(new MarkerOptions().position(
-                new LatLng(lat, Lng))
-                .title("You are now Here").visible(true)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
-                .snippet("Updated Location"));
-        currentLocationMarker.showInfoWindow();
-    }
 }
