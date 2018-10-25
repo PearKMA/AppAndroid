@@ -179,8 +179,8 @@ public class ActivityDangNhap extends AppCompatActivity {
     }
 
     public void showSpinnerProgressDialog() {
-        progressDialog.setTitle("Loading");
-        progressDialog.setMessage("Logging in, please wait");
+        progressDialog.setTitle("Đăng nhập");
+        progressDialog.setMessage("Đang đăng nhập, vui lòng đợi.");
         progressDialog.show();
     }
 
