@@ -71,7 +71,7 @@
             android:name=".Chat.MessageActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".NguoiThan.NguoiThanActivity"
+            android:name=".NguoiThan.NhomNguoiThan"
             android:label="@string/title_activity_nguoi_than"
             android:theme="@style/AppTheme" />
         <activity
@@ -83,7 +83,10 @@
             android:label="@string/title_activity_maps"
             android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity android:name=".LienKetAction.ThamGiaActivity" />
-        <activity android:name=".VungAnToan.BaoDongActivity"></activity>
+        <activity android:name=".VungAnToan.BaoDongActivity" />
+        <activity
+            android:name=".NguoiThan.NhomNguoiThanMapActivity"
+            android:label="@string/title_activity_nhom_nguoi_than_map"></activity>
     </application>
 
 </manifest>

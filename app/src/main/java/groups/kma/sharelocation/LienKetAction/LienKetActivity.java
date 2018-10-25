@@ -152,6 +152,7 @@ public class LienKetActivity extends Fragment {
                     String inviteKey = "InviteKey/"+randomkey;
                     Map inviteKeyCon = new HashMap();
                     inviteKeyCon.put("GroupId",group_location_id);
+                    inviteKeyCon.put("NameGroup",edit);
                     Map inviteKeyConDetail = new HashMap();
                     inviteKeyConDetail.put(inviteKey,inviteKeyCon);
                     rootRef.updateChildren(inviteKeyConDetail, new DatabaseReference.CompletionListener() {

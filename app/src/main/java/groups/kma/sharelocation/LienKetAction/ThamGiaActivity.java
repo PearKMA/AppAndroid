@@ -19,6 +19,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import groups.kma.sharelocation.LoginAction.ActivityDangKy;
 import groups.kma.sharelocation.R;
 import groups.kma.sharelocation.model.GroupLocations;
@@ -32,6 +35,7 @@ public class ThamGiaActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser mUser;
     private String uid="";
+    private DatabaseReference mRRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +44,7 @@ public class ThamGiaActivity extends AppCompatActivity {
         mUser = mAuth.getCurrentUser();
         uid = mUser.getUid();
         mRef = FirebaseDatabase.getInstance().getReference();
+        mRRef = FirebaseDatabase.getInstance().getReference();
         btnThamgia = findViewById(R.id.btnThamGia);
         invitecode = findViewById(R.id.NhapMaMoi);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -59,7 +64,7 @@ public class ThamGiaActivity extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         GroupLocations group_location = dataSnapshot.getValue(GroupLocations.class);
                         String group_location_id = group_location.getGroupId();
-                        Toast.makeText(ThamGiaActivity.this, ""+group_location_id, Toast.LENGTH_SHORT).show();
+                        String edit = group_location.getNameGroup().toString();
                         //tham gia nhom
                         String type = "member";
                         MemberLocations mem = new MemberLocations(type);
@@ -71,6 +76,12 @@ public class ThamGiaActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(ThamGiaActivity.this, "Không có nhóm với mã mời này", Toast.LENGTH_SHORT).show();
                                 }
+                            }
+                        });
+                        mRRef.child("Users").child(uid).child("GroupLocationKey").child(group_location_id).child("NameGroup").setValue(edit, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
                             }
                         });
                     }

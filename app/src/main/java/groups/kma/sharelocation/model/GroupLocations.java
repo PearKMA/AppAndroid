@@ -8,13 +8,13 @@ public class GroupLocations {
     public GroupLocations() {
     }
 
-    public GroupLocations(String groupId) {
-        GroupId = groupId;
+    public GroupLocations(String nameGroup) {
+        NameGroup = nameGroup;
     }
 
     public GroupLocations(String inviteKey, String nameGroup) {
         this.inviteKey = inviteKey;
-        NameGroup = nameGroup;
+        this.NameGroup = nameGroup;
     }
 
     public String getGroupId() {

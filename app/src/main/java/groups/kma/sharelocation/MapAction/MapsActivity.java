@@ -122,41 +122,6 @@ public class MapsActivity extends FragmentActivity implements
         getAllLocation();
     }
 
-    /*
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-                view = inflater.inflate(R.layout.activity_maps, container, false);
-                mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-                SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
-                        .findFragmentById(R.id.map);
-                mapFragment.getMapAsync(this);
-                //Auto search box
-        //PlaceAutocompleteFragment autocompleteFragment =
-               // (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(
-                 //       R.id.place_autocomplete_fragment);
-        //autocompleteFragment.setOnPlaceSelectedListener(this);
-                mAuth = FirebaseAuth.getInstance();
-                currentUserId = mAuth.getCurrentUser().getUid();
-                UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
-                GroupLocationRef = FirebaseDatabase.getInstance().getReference().child("GroupsLocation").
-                        child("Group");
-                getUserInfo();
-                getAllLocation();
-                return view;
-
-    }
-    */
-    /*
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        SupportMapFragment f = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
-        if (f != null)
-            getFragmentManager().beginTransaction().remove(f).commitAllowingStateLoss();
-    }
-    */
-
-
     private void getAllLocation() {
         GroupLocationRef.addChildEventListener(new ChildEventListener() {
             @Override

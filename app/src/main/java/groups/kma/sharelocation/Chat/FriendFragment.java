@@ -84,8 +84,6 @@ public class FriendFragment extends Fragment {
                                     String online_status = (String) dataSnapshot.child("online").getValue().toString();
                                     viewHolder.setUserOnline(online_status);
                                 }
-
-
                             viewHolder.setUsername(username);
                             viewHolder.setThumb(thumbimage);
                             viewHolder.mView.setOnClickListener(new View.OnClickListener() {
@@ -102,7 +100,6 @@ public class FriendFragment extends Fragment {
                                                 if(i==0){
                                                     Intent profileIntent = new Intent(getContext(),ProfileActivity.class);
                                                     profileIntent.putExtra("user_id",list_user_id);
-
                                                     startActivity(profileIntent);
                                                 }
 
@@ -163,7 +160,6 @@ public class FriendFragment extends Fragment {
         public void setThumb(String thumbimage) {
             final CircleImageView thumb_image = mView.findViewById(R.id.profileimg);
             Picasso.get().load(thumbimage).placeholder(R.drawable.acc_box).into(thumb_image);
-
         }
 
         public void setUserOnline(String online_status) {
