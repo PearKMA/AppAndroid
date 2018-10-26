@@ -184,26 +184,12 @@ public class MainActivity extends AppCompatActivity
         String bestProvider = locationManager.getBestProvider(criteria, true);
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
            if (location != null) {
-               lastKnownLocation=location.getLatitude()+","+location.getLongitude();
-               String UserId = mAuth.getCurrentUser().getUid();
-               DatabaseReference mDatabase=firebaseDatabase.getReference().child("AlertSmS").child(UserId);
-               mDatabase.addValueEventListener(new ValueEventListener() {
-                   @Override
-                   public void onDataChange(DataSnapshot dataSnapshot) {
-                       if (dataSnapshot.exists()){
-                           String phone =dataSnapshot.child("phone").getValue(String.class);
-                            send(lastKnownLocation,phone);
-                       }else {
-                           Toast.makeText(getApplicationContext(),"Có lỗi khi thiết lập số điện thoại!",
-                                   Toast.LENGTH_SHORT).show();
-                       }
-                   }
-                   @Override
-                   public void onCancelled(DatabaseError databaseError) {
-
-                   }
-               });
+               isLocationNotNull(location);
            }else {
+               location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+               isLocationNotNull(location);
+               locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
+                       0, this);
                Toast.makeText(getApplicationContext(),"Location null rồi, thay gps đi!",Toast.LENGTH_SHORT)
                        .show();
            }
@@ -211,7 +197,27 @@ public class MainActivity extends AppCompatActivity
                    0, this);
 
        }
+    private void isLocationNotNull(Location location){
+        lastKnownLocation=location.getLatitude()+","+location.getLongitude();
+        String UserId = mAuth.getCurrentUser().getUid();
+        DatabaseReference mDatabase=firebaseDatabase.getReference().child("AlertSmS").child(UserId);
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()){
+                    String phone =dataSnapshot.child("phone").getValue(String.class);
+                    send(lastKnownLocation,phone);
+                }else {
+                    Toast.makeText(getApplicationContext(),"Có lỗi khi thiết lập số điện thoại!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+    }
     private void send(String lastKnownLocation,String phone) {
             final SmsManager smsManager = SmsManager.getDefault();
             Intent intent = new Intent("ACTION_MSG_SEND");
