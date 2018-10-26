@@ -10,12 +10,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,7 +36,6 @@ import groups.kma.sharelocation.R;
 public class VungAnToanActivity extends Fragment implements LocationListener{
     private LocationManager locationManager;
     private Location location;
-    private TextView txtViTri;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private String UserId;
@@ -40,12 +43,22 @@ public class VungAnToanActivity extends Fragment implements LocationListener{
     private Double myLat,myLong;
     private int distance=2000;
     int notificationId;
+    ArrayList<String> arrayList;
+    ArrayAdapter<String> adapter;
+    ListView lvPhoneAlert;
+    EditText edtDistance;
+    FloatingActionButton btnSet;
     private ArrayList<SharedLocation> list;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_vung_an_toan, container, false);
-        txtViTri = view.<TextView>findViewById(R.id.txtVitri);
+        edtDistance = view.<EditText>findViewById(R.id.edtKhoangCach);
+        btnSet= view.<FloatingActionButton>findViewById(R.id.fab);
+        arrayList=new ArrayList<>();
+        adapter=new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_multiple_choice,
+                arrayList);
+        lvPhoneAlert=view.findViewById(R.id.lvPhoneAlert);
         getLocation();
         dsFriendId=new ArrayList<>();
         list=new ArrayList<>();

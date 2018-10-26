@@ -9,10 +9,34 @@
     tools:context=".VungAnToan.VungAnToanActivity"
     tools:showIn="@layout/activity_vung_an_toan">
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/txt1"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nhập khoảng cách:"
-        android:id="@+id/txtVitri"
-        />
+        android:textSize="20sp"
+        android:layout_margin="20dp"
+        android:textColor="@color/mauDen"
+        android:text="Thiết lập khoảng cách an toàn: "/>
+    <EditText
+        android:layout_width="match_parent"
+        android:inputType="number"
+        android:id="@+id/edtKhoangCach"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:textSize="20sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
+        android:textColor="@color/mauDen"
+        android:text="Danh sách bạn bè đã có vị trí: "
+        android:layout_below="@id/btnThemSDT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ListView
+        android:id="@+id/lvPhoneAlert"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/txt2"
+        android:layout_margin="10dp"
+        android:background="@drawable/shape2"></ListView>
 
 </LinearLayout>

@@ -31,7 +31,7 @@ import groups.kma.sharelocation.R;
 import groups.kma.sharelocation.model.Users;
 
 public class BaoDongActivity extends Fragment {
-     ArrayList<String> arrayList;
+    ArrayList<String> arrayList;
     ArrayAdapter<String> adapter;
     ListView lvPhoneAlert;
     EditText edtPhone;
