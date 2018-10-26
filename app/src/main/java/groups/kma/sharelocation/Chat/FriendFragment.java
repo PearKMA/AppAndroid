@@ -45,7 +45,7 @@ public class FriendFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mMainView = inflater.inflate(R.layout.fragment_friend,container,false);
+        mMainView = inflater.inflate(R.layout.fragment_friend, container, false);
 
         mFriendLists = (RecyclerView) mMainView.findViewById(R.id.friendlist);
 
@@ -64,7 +64,7 @@ public class FriendFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseRecyclerAdapter<Friends,FriendsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Friends, FriendsViewHolder>(
+        FirebaseRecyclerAdapter<Friends, FriendsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Friends, FriendsViewHolder>(
                 Friends.class,
                 R.layout.item_user_singer_layout,
                 FriendsViewHolder.class,
@@ -72,87 +72,90 @@ public class FriendFragment extends Fragment {
         ) {
             @Override
             protected void populateViewHolder(final FriendsViewHolder viewHolder, Friends model, int position) {
-                    viewHolder.setDate(model.getDate());
-                    final String list_user_id = getRef(position).getKey();
-                    mUserDatabase.child(list_user_id).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(final DataSnapshot dataSnapshot) {
-                            final String username = dataSnapshot.child("userName").getValue().toString();
-                            String thumbimage = dataSnapshot.child("photoUrl").getValue().toString();
+                viewHolder.setDate(model.getDate());
+                final String list_user_id = getRef(position).getKey();
+                mUserDatabase.child(list_user_id).addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(final DataSnapshot dataSnapshot) {
+                        final String username = dataSnapshot.child("userName").getValue().toString();
+                        String thumbimage = dataSnapshot.child("photoUrl").getValue().toString();
 
-                                if(dataSnapshot.hasChild("online")){
-                                    String online_status = (String) dataSnapshot.child("online").getValue().toString();
-                                    viewHolder.setUserOnline(online_status);
-                                }
-                            viewHolder.setUsername(username);
-                            viewHolder.setThumb(thumbimage);
-                            viewHolder.mView.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    CharSequence options[] = new CharSequence[]{
-                                        "Hồ sơ "+username,"Gửi tin nhắn"
-                                    };
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle("Chọn tính năng");
-                                    builder.setItems(options, new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                                if(i==0){
-                                                    Intent profileIntent = new Intent(getContext(),ProfileActivity.class);
-                                                    profileIntent.putExtra("user_id",list_user_id);
-                                                    startActivity(profileIntent);
-                                                }
-
-                                            if(i==1){
-                                                    if(dataSnapshot.child("online").exists()) {
-                                                        Intent chatIntent = new Intent(getContext(), MessageActivity.class);
-                                                        chatIntent.putExtra("user_id", list_user_id);
-                                                        chatIntent.putExtra("user_name", username);
-                                                        startActivity(chatIntent);
-                                                    }else{
-                                                        mUserDatabase.child(list_user_id).child("online").setValue(ServerValue.TIMESTAMP)
-                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void aVoid) {
-                                                                        Intent chatIntent = new Intent(getContext(), MessageActivity.class);
-                                                                        chatIntent.putExtra("user_id", list_user_id);
-                                                                        chatIntent.putExtra("user_name", username);
-                                                                        startActivity(chatIntent);
-                                                                    }
-                                                                });
-                                                    }
-                                            }
-
+                        if (dataSnapshot.hasChild("online")) {
+                            String online_status = (String) dataSnapshot.child("online").getValue().toString();
+                            viewHolder.setUserOnline(online_status);
+                        }
+                        viewHolder.setUsername(username);
+                        viewHolder.setThumb(thumbimage);
+                        viewHolder.mView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                CharSequence options[] = new CharSequence[]{
+                                        "Hồ sơ " + username, "Gửi tin nhắn"
+                                };
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("Chọn tính năng");
+                                builder.setItems(options, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        if (i == 0) {
+                                            Intent profileIntent = new Intent(getContext(), ProfileActivity.class);
+                                            profileIntent.putExtra("user_id", list_user_id);
+                                            startActivity(profileIntent);
                                         }
-                                    });
-                                    builder.show();
-                                }
-                            });
 
-                        }
+                                        if (i == 1) {
+                                            if (dataSnapshot.child("online").exists()) {
+                                                Intent chatIntent = new Intent(getContext(), MessageActivity.class);
+                                                chatIntent.putExtra("user_id", list_user_id);
+                                                chatIntent.putExtra("user_name", username);
+                                                startActivity(chatIntent);
+                                            } else {
+                                                mUserDatabase.child(list_user_id).child("online").setValue(ServerValue.TIMESTAMP)
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                Intent chatIntent = new Intent(getContext(), MessageActivity.class);
+                                                                chatIntent.putExtra("user_id", list_user_id);
+                                                                chatIntent.putExtra("user_name", username);
+                                                                startActivity(chatIntent);
+                                                            }
+                                                        });
+                                            }
+                                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+                                    }
+                                });
+                                builder.show();
+                            }
+                        });
 
-                        }
-                    });
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
 
             }
         };
         mFriendLists.setAdapter(firebaseRecyclerAdapter);
     }
 
-    public static class FriendsViewHolder extends RecyclerView.ViewHolder{
+    public static class FriendsViewHolder extends RecyclerView.ViewHolder {
         View mView;
+
         public FriendsViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
         }
-        public void setDate(String date){
-                TextView userName = mView.findViewById(R.id.custom_user_last_seen);
+
+        public void setDate(String date) {
+            TextView userName = mView.findViewById(R.id.custom_user_last_seen);
             userName.setText("Lần cuối online :\n" + date);
         }
-        public void setUsername(String name){
+
+        public void setUsername(String name) {
             TextView usname = mView.findViewById(R.id.textView1);
             usname.setText(name);
         }
@@ -164,9 +167,9 @@ public class FriendFragment extends Fragment {
 
         public void setUserOnline(String online_status) {
             ImageView online_status_view = mView.findViewById(R.id.icon_online);
-            if(online_status.equals("true")){
+            if (online_status.equals("true")) {
                 online_status_view.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 online_status_view.setVisibility(View.INVISIBLE);
             }
 

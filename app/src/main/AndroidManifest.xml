@@ -92,6 +92,8 @@
             android:name=".NguoiThan.NhomNguoiThanMapActivity"
             android:label="@string/title_activity_nhom_nguoi_than_map" />
         <activity android:name=".NguoiThan.QuanLyNhomActivity"></activity>
+        <activity android:name=".NguoiThan.HelloNguoiThan"></activity>
+        <activity android:name=".NguoiThan.GroupChatActivity"></activity>
         <receiver android:name=".VungAnToan.RunInner">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

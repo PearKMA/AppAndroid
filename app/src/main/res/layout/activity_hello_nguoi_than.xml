@@ -1,9 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".NguoiThan.HelloNguoiThan">
+    <android.support.v7.widget.Toolbar
+        android:background="@color/mauChuDao"
+        android:layout_alignParentTop="true"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.Toolbar>
+    <TextView
+        android:id="@+id/txtmamoi"
+        android:layout_below="@id/toolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/mauDen"
+        android:text="Mã mời bạn bè"/>
+    <TextView
+        android:id="@+id/txtkey"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="XXXXXX"
+        android:gravity="center_horizontal"
+        android:textSize="20sp"
+        android:textColor="@color/mauChuDao"
+        android:layout_below="@id/txtmamoi"/>
+    <LinearLayout
+        android:id="@+id/groupbtn"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/txtkey"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+        <Button
+            android:text="Chia sẻ mã"
+            android:id="@+id/chiase"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:text="Đổi mã mời "
+            android:id="@+id/doima"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <TextView
+        android:layout_below="@id/groupbtn"
+        android:id="@+id/textds"
+        android:layout_margin="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/mauDen"
+        android:layout_width="match_parent"
+        android:text="Danh sách thành viên group"
+        android:layout_height="wrap_content" />
+    <android.support.v7.widget.RecyclerView
+        android:layout_below="@id/textds"
+        android:id="@+id/listDs"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
 
-</android.support.constraint.ConstraintLayout>
+
+
+</RelativeLayout>

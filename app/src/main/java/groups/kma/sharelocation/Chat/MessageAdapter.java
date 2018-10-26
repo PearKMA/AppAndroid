@@ -67,15 +67,15 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
             if(fromUserId.equals(null)||fromUserId.equals("")){
                 holder.messageText.setBackgroundResource(R.drawable.message_text_background);
                 holder.messageText.setTextColor(Color.WHITE);
-                holder.messageText.setGravity(Gravity.LEFT);
+                holder.messageText.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
             }else if(fromUserId.equals(message_sender_id)){
                 holder.messageText.setBackgroundResource(R.drawable.message_text_background_two);
                 holder.messageText.setTextColor(Color.BLACK);
-                holder.messageText.setGravity(Gravity.RIGHT);
+                holder.messageText.setGravity(Gravity.CENTER_VERTICAL | Gravity.RIGHT);
             }else{
                 holder.messageText.setBackgroundResource(R.drawable.message_text_background);
                 holder.messageText.setTextColor(Color.WHITE);
-                holder.messageText.setGravity(Gravity.LEFT);
+                holder.messageText.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
             }
             holder.messageText.setText(messages.getMessage());
         }else{

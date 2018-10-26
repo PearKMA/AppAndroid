@@ -25,6 +25,7 @@
         android:layout_toRightOf="@id/message_text"
         android:background="@drawable/message_text_background"
         android:padding="15dp"
+        android:gravity="center_vertical"
         android:text="TextView"
         android:textSize="16sp"
         android:textColor="@color/mauTrang" />

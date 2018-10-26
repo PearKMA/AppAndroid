@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -76,7 +77,10 @@ public class QuanLyNhomActivity extends AppCompatActivity {
                         final String groupname = dataSnapshot.child("NameGroup").getValue().toString();
                         final MemberType memberType =dataSnapshot.child("Members").child(mUid).getValue(MemberType.class);
                         final String membertype = memberType.getType().toString();
-                        final String memberkey = memberType.getInviteKey();
+                        String memberkey = "";
+                        if(membertype.equals("admin")) {
+                             memberkey = memberType.getInviteKey().toString();
+                        }
                         final String statusgroup = dataSnapshot.child("StatusGroup").getValue().toString();
                         String thumbimage = dataSnapshot.child("PhotoGroup").getValue().toString();
                         if(thumbimage!=null) {
@@ -84,41 +88,71 @@ public class QuanLyNhomActivity extends AppCompatActivity {
                         }
                         viewHolder.setUsername(groupname);
                         viewHolder.setStatusGroup(statusgroup);
+                        final String finalMemberkey = memberkey;
                         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                CharSequence options[] = new CharSequence[]{
-                                        "Quản lý nhóm "+groupname,"Gửi tin nhắn"
-                                };
-                                AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyNhomActivity.this);
-                                builder.setTitle("Chọn tính năng");
-                                builder.setItems(options, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        if(i==0){
-                                            if(membertype.equals("admin")) {
-                                                Intent quanlyIntent = new Intent(QuanLyNhomActivity.this, HelloNguoiThan.class);
-                                                quanlyIntent.putExtra("groupid", groupid);
-                                                quanlyIntent.putExtra("groupinvitekey", groupid);
-                                                startActivity(quanlyIntent);
-                                            }else{
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyNhomActivity.this);
-                                                builder.setTitle("Từ chối truy nhập");
-                                                builder.setMessage("Bạn không có quyền quản lý nhóm này.\n Nếu có vui lòng liên hệ nhà phát triển để được hỗ trợ");
-                                                builder.setCancelable(true);
-                                                AlertDialog alertDialog = builder.create();
-                                                alertDialog.show();
+                                // Trường hợp 1 : khi mà bạn là admin
+                                if(membertype.equals("admin")) {
+                                    CharSequence options[] = new CharSequence[]{
+                                            "Quản lý nhóm " + groupname, "Gửi tin nhắn"
+                                    };
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyNhomActivity.this);
+                                    builder.setTitle("Chọn tính năng");
+                                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            if (i == 0) {
+                                                if (membertype.equals("admin")) {
+                                                    Intent quanlyIntent = new Intent(QuanLyNhomActivity.this, HelloNguoiThan.class);
+                                                    quanlyIntent.putExtra("groupid", groupid);
+                                                    quanlyIntent.putExtra("groupname",groupname);
+                                                    quanlyIntent.putExtra("groupinvitekey", finalMemberkey);
+                                                    Toast.makeText(QuanLyNhomActivity.this, ""+finalMemberkey, Toast.LENGTH_SHORT).show();
+                                                    startActivity(quanlyIntent);
+                                                } else {
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyNhomActivity.this);
+                                                    builder.setTitle("Từ chối truy nhập");
+                                                    builder.setMessage("Bạn không có quyền quản lý nhóm này.\n Nếu có vui lòng liên hệ nhà phát triển để được hỗ trợ");
+                                                    builder.setCancelable(true);
+                                                    AlertDialog alertDialog = builder.create();
+                                                    alertDialog.show();
+                                                }
                                             }
+
+                                            if (i == 1) {
+                                                //chat nhóm
+                                                Intent chatnhomIntent = new Intent(QuanLyNhomActivity.this,GroupChatActivity.class);
+                                                chatnhomIntent.putExtra("groupname",groupname);
+                                                chatnhomIntent.putExtra("groupid",groupid);
+                                                startActivity(chatnhomIntent);
+                                            }
+
                                         }
-
-                                        if(i==1){
+                                    });
+                                    builder.show();
+                                }else{
+                                    // Trường hợp 2
+                                    CharSequence options[] = new CharSequence[]{
+                                            "Chat nhóm"
+                                    };
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyNhomActivity.this);
+                                    builder.setTitle("Chọn tính năng");
+                                    builder.setItems(options, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            if (i == 0) {
+                                               // nhắn tin nhóm
+                                                Intent chatnhomIntent = new Intent(QuanLyNhomActivity.this,GroupChatActivity.class);
+                                                chatnhomIntent.putExtra("groupname",groupname);
+                                                chatnhomIntent.putExtra("groupid",groupid);
+                                                startActivity(chatnhomIntent);
+                                            }
 
                                         }
-
-                                    }
-                                });
-                                builder.show();
-
+                                    });
+                                    builder.show();
+                                }
                             }
                         });
                     }
