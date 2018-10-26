@@ -162,7 +162,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void sendSmSAlert() {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -180,39 +183,41 @@ public class MainActivity extends AppCompatActivity
         Location location = locationManager.getLastKnownLocation(bestProvider);
            if (location != null) {
                lastKnownLocation=location.getLatitude()+","+location.getLatitude();
+               if (BaoDongActivity.smsPhone!=null) {
+                   final SmsManager smsManager = SmsManager.getDefault();
+                   Intent intent = new Intent("ACTION_MSG_SEND");
+                   final PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext()
+                           , 0, intent, 0);
+                   registerReceiver(new BroadcastReceiver() {
+                       @Override
+                       public void onReceive(Context context, Intent intent) {
+                           int result = getResultCode();
+                           String msg = "Gửi thành công!";
+                           if (result != Activity.RESULT_OK) {
+                               msg = "Có lỗi xảy ra, vui lòng thử lại!";
+                           }
+                           Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                       }
+
+                   }, new IntentFilter("ACTION_MSG_SEND"));
+                   String mess1 = "User: " + nameUser + " đã gửi tín hiệu khẩn cấp tại vị trí " +
+                           lastKnownLocation;
+
+                   Calendar ccalForDate=Calendar.getInstance();
+                   SimpleDateFormat currentDateFormat = new SimpleDateFormat("hh:mm a dd/MM");
+                   String currentDate=currentDateFormat.format(ccalForDate.getTime());
+
+                   String mess = mess1 + " lúc " + currentDate;
+                   smsManager.sendTextMessage(BaoDongActivity.smsPhone, null, mess, pendingIntent,
+                           null);
+               }else {
+                   Toast.makeText(getApplicationContext(),"Có lỗi khi thiết lập số điện thoại!",
+                           Toast.LENGTH_SHORT).show();
+               }
            }
            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
                    0, this);
-           if (BaoDongActivity.smsPhone!=null) {
-            final SmsManager smsManager = SmsManager.getDefault();
-            Intent intent = new Intent("ACTION_MSG_SEND");
-            final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-            registerReceiver(new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context context, Intent intent) {
-                    int result = getResultCode();
-                    String msg = "Gửi thành công!";
-                    if (result != Activity.RESULT_OK) {
-                        msg = "Có lỗi xảy ra, vui lòng thử lại!";
-                    }
-                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                }
 
-            }, new IntentFilter("ACTION_MSG_SEND"));
-            String mess1 = "User: " + nameUser + " đã gửi tín hiệu khẩn cấp tại vị trí " +
-                    lastKnownLocation;
-
-            Calendar ccalForDate=Calendar.getInstance();
-            SimpleDateFormat currentDateFormat = new SimpleDateFormat("hh:mm a dd/MM");
-            String currentDate=currentDateFormat.format(ccalForDate.getTime());
-
-            String mess = mess1 + " lúc " + currentDate;
-            smsManager.sendTextMessage(BaoDongActivity.smsPhone, null, mess, pendingIntent,
-                    null);
-        }else {
-            Toast.makeText(getApplicationContext(),"Có lỗi khi thiết lập số điện thoại!",
-                    Toast.LENGTH_SHORT).show();
-        }
        }
 
 
