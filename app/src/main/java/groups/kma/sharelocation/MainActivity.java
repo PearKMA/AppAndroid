@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity
         String bestProvider = locationManager.getBestProvider(criteria, true);
         Location location = locationManager.getLastKnownLocation(bestProvider);
            if (location != null) {
-               lastKnownLocation=location.getLatitude()+","+location.getLatitude();
+               lastKnownLocation=location.getLatitude()+","+location.getLongitude();
                String UserId = mAuth.getCurrentUser().getUid();
                DatabaseReference mDatabase=firebaseDatabase.getReference().child("AlertSmS").child(UserId);
                mDatabase.addValueEventListener(new ValueEventListener() {
