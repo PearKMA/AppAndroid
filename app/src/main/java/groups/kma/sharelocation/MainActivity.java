@@ -8,12 +8,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
@@ -50,8 +52,6 @@ import groups.kma.sharelocation.Chat.ChatActivity;
 import groups.kma.sharelocation.Chat.SettingsActivity;
 import groups.kma.sharelocation.LienKetAction.LienKetActivity;
 import groups.kma.sharelocation.LoginAction.ActivityDangNhap;
-import groups.kma.sharelocation.MapAction.MapsActivity;
-import groups.kma.sharelocation.NguoiThan.NhomNguoiThan;
 import groups.kma.sharelocation.NguoiThan.NhomNguoiThanMapActivity;
 import groups.kma.sharelocation.NguoiThan.QuanLyNhomActivity;
 import groups.kma.sharelocation.VungAnToan.BaoDongActivity;
@@ -59,10 +59,9 @@ import groups.kma.sharelocation.VungAnToan.VungAnToanActivity;
 import groups.kma.sharelocation.model.Users;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,LocationListener
-   {
+        implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
     TextView navUsername, navEmail;
-    ImageView avatar,imageviewcanhbao;
+    ImageView avatar, imageviewcanhbao;
     private View headerView;
     private FirebaseAuth mAuth;
     private FirebaseDatabase firebaseDatabase;
@@ -84,17 +83,13 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         headerView = navigationView.getHeaderView(0);
@@ -104,10 +99,9 @@ public class MainActivity extends AppCompatActivity
         navUsername = headerView.findViewById(R.id.tvUsername);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if(mCurrentUser != null){
+        if (mCurrentUser != null) {
             String online_user_id = mAuth.getCurrentUser().getUid();
             userReference = FirebaseDatabase.getInstance().getReference().child("Users").child(online_user_id);
-        }
         if (user != null) {
             firebaseDatabase = FirebaseDatabase.getInstance();
             mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -143,36 +137,47 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction().replace(R.id.contentX, lienKetActivity).commit();
         //addControls();
     }
+    }
 
-       private void GuiCanhBao() {
-           AlertDialog.Builder builder = new AlertDialog.Builder(this);
-           builder.setTitle("Gửi báo động");
-           builder.setMessage("Bạn có muốn gửi báo động không không?");
-           builder.setCancelable(false);
-           builder.setPositiveButton("Hủy bỏ", new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialogInterface, int i) {
-                   dialogInterface.dismiss();
-               }
-           });
-           builder.setNegativeButton("Đồng ý", new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialogInterface, int i) {
-                   dialogInterface.dismiss();
-                   sendSmSAlert();
-               }
-           });
-           AlertDialog alertDialog = builder.create();
-           alertDialog.show();
-       }
+    private void GuiCanhBao() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Gửi báo động");
+        builder.setMessage("Bạn có muốn gửi báo động không không?");
+        builder.setCancelable(false);
+        builder.setPositiveButton("Hủy bỏ", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton("Đồng ý", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                sendSmSAlert();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
-       private void sendSmSAlert() {
-           locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-           Criteria criteria = new Criteria();
+    private void sendSmSAlert() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
         /*Sử dụng lớp Criteria để yêu cầu nhà cung cấp xử lý chính xác những số liệu có sẵn như:
         vĩ độ và kinh độ, tốc độ, độ cao, chi phí và yêu về cầu năng lương điện. */
-           String bestProvider = locationManager.getBestProvider(criteria, true);
-           Location location = locationManager.getLastKnownLocation(bestProvider);
+        String bestProvider = locationManager.getBestProvider(criteria, true);
+        Location location = locationManager.getLastKnownLocation(bestProvider);
            if (location != null) {
                lastKnownLocation=location.getLatitude()+","+location.getLatitude();
            }
@@ -214,14 +219,20 @@ public class MainActivity extends AppCompatActivity
        @Override
     protected void onStart() {
         super.onStart();
-        mCurrentUser = mAuth.getCurrentUser();
-        if(mCurrentUser==null){
+        FirebaseUser crUser = mAuth.getCurrentUser();
+        if(crUser==null){
                 //if null log out
-            FirebaseAuth.getInstance().signOut();
+            //FirebaseAuth.getInstance().signOut();
+            Intent intext = new Intent(getApplicationContext(), ActivityDangNhap.class);
+            intext.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intext);
             finish();
-            startActivity(new Intent(getApplicationContext(), ActivityDangNhap.class));
-        }else if (mCurrentUser!=null){
-            userReference.child("online").setValue("true");
+
+        }else{
+            mCurrentUser = mAuth.getCurrentUser();
+            if (mCurrentUser!=null){
+                userReference.child("online").setValue("true");
+            }
         }
     }
 
@@ -319,17 +330,16 @@ public class MainActivity extends AppCompatActivity
        //log out
     private void dialogSetup() {
         AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-        alert.setTitle("Log out");
+        alert.setTitle("Đăng xuất");
         //alert.setIcon(R.drawable.icons8_logout);
-        alert.setMessage("Do you want to log out?");
-        alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        alert.setMessage("Bạn có muốn đăng xuất không?");
+        alert.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
                 if(mCurrentUser != null){
                     userReference.child("online").setValue(ServerValue.TIMESTAMP);
                 }
-
                 FirebaseAuth.getInstance().signOut();
                 finish();
                 startActivity(new Intent(getApplicationContext(), ActivityDangNhap.class));
@@ -337,7 +347,7 @@ public class MainActivity extends AppCompatActivity
                 preferences.edit().putBoolean("saveLogin", false).apply();
             }
         });
-        alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+        alert.setNegativeButton("Hủy bỏ", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 return;

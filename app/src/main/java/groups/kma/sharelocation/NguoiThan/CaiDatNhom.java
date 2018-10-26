@@ -1,11 +1,13 @@
-package groups.kma.sharelocation.Chat;
+package groups.kma.sharelocation.NguoiThan;
 
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +15,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,29 +34,26 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import groups.kma.sharelocation.R;
-import groups.kma.sharelocation.model.Users;
 import id.zelory.compressor.Compressor;
 
-public class SettingsActivity extends AppCompatActivity {
-    private DatabaseReference mUserDatabase;
+public class CaiDatNhom extends AppCompatActivity {
+    private DatabaseReference mGroupRef;
     private FirebaseUser mCurrentUser;
     private TextView displayname, status;
     private CircleImageView mImage;
-    Button changeStt, changeImg;
+    Button changeStt, changeImg,changeName,deleteGroup;
     private static final int GALLERY_PICK = 1;
     Bitmap thumb_bitmap;
-    private DatabaseReference mStatusDatabase;
+    private DatabaseReference rootRef;
 
     private StorageReference mImagesStorage;
     private ProgressDialog mProgressDialog;
@@ -63,34 +61,34 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        displayname = findViewById(R.id.settingDisplayname);
-        status = findViewById(R.id.settingStatus);
+        setContentView(R.layout.activity_cai_dat_nhom);
+        displayname = findViewById(R.id.name_group);
+        status = findViewById(R.id.status_group);
         mImage = findViewById(R.id.settingImage);
         changeImg = findViewById(R.id.button2);
         changeStt = findViewById(R.id.button3);
+        changeName = findViewById(R.id.button4);
+        deleteGroup = findViewById(R.id.button5);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Thông tin người dùng");
-
+        getSupportActionBar().setTitle("Cài đặt nhóm");
+        final String groupid = getIntent().getStringExtra("groupid");
         mCurrentUser = FirebaseAuth.getInstance().getCurrentUser();
         mImagesStorage = FirebaseStorage.getInstance().getReference();
         String current_uid = mCurrentUser.getUid();
-        mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
-        mUserDatabase.keepSynced(true);
-        mStatusDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(current_uid);
-
-        mUserDatabase.addValueEventListener(new ValueEventListener() {
+        mGroupRef = FirebaseDatabase.getInstance().getReference().child("GroupLocationCon").child(groupid);
+        mGroupRef.keepSynced(true);
+        rootRef = FirebaseDatabase.getInstance().getReference();
+        mGroupRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Users users = dataSnapshot.getValue(Users.class);
-                displayname.setText(users.getUserName());
-                status.setText(users.getStatus());
-                final String image = dataSnapshot.child("image").getValue().toString();
-                String thumb_image = dataSnapshot.child("photoUrl").getValue().toString();
+                InfoGroup infoGroup = dataSnapshot.getValue(InfoGroup.class);
+                displayname.setText(infoGroup.getNameGroup());
+                status.setText(infoGroup.getStatusGroup());
+                final String image = dataSnapshot.child("PhotoGroup").getValue().toString();
 
                 if (!image.equals("default")) {
                     //Picasso.get().load(image).placeholder(R.drawable.acc_box).into(mImage);
@@ -117,7 +115,6 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
-
         changeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -133,16 +130,50 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
+        changeName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showChangeNameDialog();
+            }
+        });
+        deleteGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(CaiDatNhom.this);
+                builder.setTitle("Xóa nhóm");
+                builder.setMessage("Bạn có muốn xóa nhóm không?");
+                builder.setCancelable(false);
+                builder.setPositiveButton("Đồng ý", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.setNegativeButton("Hủy bỏ", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
         changeStt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showChangeSttDialog();
             }
         });
+
+    }
+
+    private void showChangeNameDialog() {
+        Toast.makeText(CaiDatNhom.this, "Đổi tên group sẽ xuất hiện sớm", Toast.LENGTH_SHORT).show();
     }
 
     private void showChangeSttDialog() {
-        final Dialog dialog = new Dialog(SettingsActivity.this);
+        final Dialog dialog = new Dialog(CaiDatNhom.this);
         dialog.setTitle("Đổi trạng thái");
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_change_stt);
@@ -158,14 +189,14 @@ public class SettingsActivity extends AppCompatActivity {
                 mProgressDialog.setMessage("Đang thay đổi trạng thái");
                 mProgressDialog.show();
                 String edit = editstt.getText().toString();
-                mStatusDatabase.child("status").setValue(edit).addOnCompleteListener(new OnCompleteListener<Void>() {
+                mGroupRef.child("StatusGroup").setValue(edit).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
 
                             mProgressDialog.dismiss();
                         }else{
-                            Toast.makeText(SettingsActivity.this, "Thay đổi trạng thái thất bại.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CaiDatNhom.this, "Thay đổi trạng thái thất bại.", Toast.LENGTH_SHORT).show();
                             mProgressDialog.dismiss();
                         }
                     }
@@ -181,6 +212,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
         dialog.show();
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -198,7 +230,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             if (resultCode == RESULT_OK) {
 
-                mProgressDialog = new ProgressDialog(SettingsActivity.this);
+                mProgressDialog = new ProgressDialog(CaiDatNhom.this);
                 mProgressDialog.setTitle("Uploading Image...");
                 mProgressDialog.setMessage("Vui lòng đợi một chút.");
                 mProgressDialog.setCanceledOnTouchOutside(false);
@@ -208,6 +240,7 @@ public class SettingsActivity extends AppCompatActivity {
                 final File thumb_filePath = new File(resultUri.getPath());
 
                 String current_user_id = mCurrentUser.getUid();
+                String groupid = getIntent().getStringExtra("groupid");
 
                 try {
                     thumb_bitmap = new Compressor(this).setMaxWidth(200).setMaxHeight(200)
@@ -219,15 +252,15 @@ public class SettingsActivity extends AppCompatActivity {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 thumb_bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 final byte[] thumb_byte = baos.toByteArray();
-                StorageReference filepath = mImagesStorage.child("profile_images").child(current_user_id + ".jpg");
-                final StorageReference thumb_filepath = mImagesStorage.child("profile_images").child("thumbs").child(current_user_id + ".jpg");
+                StorageReference filepath = mImagesStorage.child("groups_images").child(groupid + ".jpg");
+                final StorageReference thumb_filepath = mImagesStorage.child("groups_images").child("thumbs").child(groupid + ".jpg");
 
                 filepath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
                         if (task.isSuccessful()) {
-                             final String dowload_url = task.getResult().getDownloadUrl().toString();
-                             UploadTask uploadTask = thumb_filepath.putBytes(thumb_byte);
+                            final String dowload_url = task.getResult().getDownloadUrl().toString();
+                            UploadTask uploadTask = thumb_filepath.putBytes(thumb_byte);
                             uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -235,23 +268,24 @@ public class SettingsActivity extends AppCompatActivity {
                                     String thumb_download = task.getResult().getDownloadUrl().toString();
 
                                     if (task.isSuccessful()) {
+                                        // sua
                                         Map update_hashMap = new HashMap<>();
-                                        update_hashMap.put("image",dowload_url);
-                                        update_hashMap.put("photoUrl",thumb_download);
-                                        mUserDatabase.updateChildren(update_hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        update_hashMap.put("PhotoGroup",dowload_url);
+                                        update_hashMap.put("ThumbGroup",thumb_download);
+                                        mGroupRef.updateChildren(update_hashMap).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
                                                     mProgressDialog.dismiss();
-                                                    Toast.makeText(SettingsActivity.this, "Upload thành công.", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(CaiDatNhom.this, "Upload thành công.", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(SettingsActivity.this, "Đổi ảnh thất bại", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(CaiDatNhom.this, "Đổi ảnh thất bại", Toast.LENGTH_SHORT).show();
                                                     mProgressDialog.dismiss();
                                                 }
                                             }
                                         });
                                     } else {
-                                        Toast.makeText(SettingsActivity.this, "Đổi ảnh thất bại", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(CaiDatNhom.this, "Đổi ảnh thất bại", Toast.LENGTH_SHORT).show();
                                         mProgressDialog.dismiss();
                                     }
                                 }
@@ -259,7 +293,7 @@ public class SettingsActivity extends AppCompatActivity {
 
 
                         } else {
-                            Toast.makeText(SettingsActivity.this, "Đổi ảnh thất bại", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CaiDatNhom.this, "Đổi ảnh thất bại", Toast.LENGTH_SHORT).show();
                             mProgressDialog.dismiss();
                         }
                     }
@@ -269,8 +303,6 @@ public class SettingsActivity extends AppCompatActivity {
                 Exception error = result.getError();
             }
         }
-
-
     }
 
     @Override
@@ -280,5 +312,4 @@ public class SettingsActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
 }

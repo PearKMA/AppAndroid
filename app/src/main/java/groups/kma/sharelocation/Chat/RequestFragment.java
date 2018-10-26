@@ -56,7 +56,7 @@ public class RequestFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        myMainView = inflater.inflate(R.layout.fragment_request,container,false);
+        myMainView = inflater.inflate(R.layout.fragment_request, container, false);
         myRequestList = myMainView.findViewById(R.id.request_list);
         mAuth = FirebaseAuth.getInstance();
         online_user_id = mAuth.getCurrentUser().getUid();
@@ -71,19 +71,18 @@ public class RequestFragment extends Fragment {
         myRequestList.setLayoutManager(linearLayoutManager);
 
 
-
         return myMainView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseRecyclerAdapter<Requests,RequestViewHolder> firebaseRecyclerAdapter = new
+        FirebaseRecyclerAdapter<Requests, RequestViewHolder> firebaseRecyclerAdapter = new
                 FirebaseRecyclerAdapter<Requests, RequestViewHolder>(Requests.class,
                         R.layout.friend_request_all_user_layout,
                         RequestFragment.RequestViewHolder.class,
                         FriendRequestReference
-                        ) {
+                ) {
                     @Override
                     protected void populateViewHolder(final RequestViewHolder viewHolder, Requests model, int position) {
                         final String list_user_id = getRef(position).getKey();
@@ -92,9 +91,9 @@ public class RequestFragment extends Fragment {
                         get_type_ref.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                if(dataSnapshot.exists()){
+                                if (dataSnapshot.exists()) {
                                     String request_type = dataSnapshot.getValue().toString();
-                                    if(request_type.equals("received")){
+                                    if (request_type.equals("received")) {
                                         UserReference.child(list_user_id).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -108,14 +107,14 @@ public class RequestFragment extends Fragment {
                                                     @Override
                                                     public void onClick(View view) {
                                                         CharSequence options[] = new CharSequence[]{
-                                                                "Đồng ý kết bạn","Hủy kết bạn"
+                                                                "Đồng ý kết bạn", "Hủy kết bạn"
                                                         };
                                                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                                         builder.setTitle("Yêu cầu kết bạn");
                                                         builder.setItems(options, new DialogInterface.OnClickListener() {
                                                             @Override
                                                             public void onClick(DialogInterface dialogInterface, int i) {
-                                                                if(i==0){
+                                                                if (i == 0) {
                                                                     Calendar calForDate = Calendar.getInstance();
                                                                     SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
                                                                     final String saveCurrentDate = currentDate.format(calForDate.getTime());
@@ -150,7 +149,7 @@ public class RequestFragment extends Fragment {
                                                                     );
                                                                 }
                                                                 // chọn hủy kb
-                                                                if(i==1){
+                                                                if (i == 1) {
                                                                     FriendRequestDatabaseRef.child(online_user_id).child(list_user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
@@ -178,11 +177,7 @@ public class RequestFragment extends Fragment {
 
                                             }
                                         });
-                                    }else if(request_type.equals("sent")){
-                                        //Button req_sent_btn = viewHolder.mView.findViewById(R.id.request_accept_btn);
-                                        //req_sent_btn.setText("Req Sent");
-                                        //viewHolder.mView.findViewById(R.id.request_cancel_btn).setVisibility(View.INVISIBLE);
-
+                                    } else if (request_type.equals("sent")) {
                                         UserReference.child(list_user_id).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -205,7 +200,7 @@ public class RequestFragment extends Fragment {
                                                             public void onClick(DialogInterface dialogInterface, int i) {
 
                                                                 // chọn hủy kb
-                                                                if(i==0){
+                                                                if (i == 0) {
                                                                     FriendRequestDatabaseRef.child(online_user_id).child(list_user_id).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                         @Override
                                                                         public void onSuccess(Void aVoid) {
@@ -250,11 +245,12 @@ public class RequestFragment extends Fragment {
 
     }
 
-    public static class RequestViewHolder extends RecyclerView.ViewHolder{
+    public static class RequestViewHolder extends RecyclerView.ViewHolder {
         View mView;
+
         public RequestViewHolder(View itemView) {
             super(itemView);
-            mView= itemView;
+            mView = itemView;
         }
 
         public void setUsername(String username) {
@@ -264,7 +260,7 @@ public class RequestFragment extends Fragment {
 
         public void setThumbImage(String thumbimage) {
             final CircleImageView thumb_image = mView.findViewById(R.id.request_profile_image);
-            Picasso.get().load(thumbimage).placeholder(R.drawable.acc_box).into(thumb_image);
+            Picasso.get().load(thumbimage).placeholder(R.mipmap.ic_launcher).into(thumb_image);
         }
 
         public void setUserStatus(String user_status) {

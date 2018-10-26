@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".NguoiThan.HelloNguoiThan">
     <android.support.v7.widget.Toolbar
+        android:theme="@style/ToolBarTheme.ToolBarStyle"
         android:background="@color/mauChuDao"
         android:layout_alignParentTop="true"
         android:id="@+id/toolbar"

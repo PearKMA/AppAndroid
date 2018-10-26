@@ -8,35 +8,27 @@
     <android.support.v7.widget.Toolbar
         android:background="@color/mauChuDao"
         android:id="@+id/toolbar"
+        android:theme="@style/ToolBarTheme.ToolBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     </android.support.v7.widget.Toolbar>
-    <ScrollView
-        android:id="@+id/my_scroll_view"
-        android:layout_above="@id/myLinearLayout"
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="wrap_content"
+        android:id="@+id/message_swipe_layout"
         android:layout_below="@id/toolbar"
-        android:layout_width="match_parent"
+        android:layout_above="@id/myLinearLayout"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/groupchat_text_display"
-                android:layout_width="match_parent"
-                android:padding="10dp"
-                android:textAllCaps="false"
-                android:textSize="20sp"
-                android:layout_height="wrap_content"
-                android:textColor="@color/mauDen"
-                android:layout_marginStart="2dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="50dp"/>
-        </LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/chatview"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
 
-    </ScrollView>
+            ></android.support.v7.widget.RecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:background="@color/mauTrang"

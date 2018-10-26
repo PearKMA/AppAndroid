@@ -2,12 +2,15 @@ package groups.kma.sharelocation.NguoiThan;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -26,6 +31,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import groups.kma.sharelocation.Chat.MessageActivity;
@@ -42,6 +51,7 @@ public class HelloNguoiThan extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private String mUid;
     private DatabaseReference rootRef;
+    private String randomkeyNew = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,12 +64,14 @@ public class HelloNguoiThan extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mUid = mAuth.getCurrentUser().getUid();
         rootRef = FirebaseDatabase.getInstance().getReference();
-        String groupname = getIntent().getStringExtra("groupname");
+        final String groupname = getIntent().getStringExtra("groupname");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Nhóm " + groupname);
+        toolbar.setTitleTextColor(Color.WHITE);
+
         final String key = getIntent().getStringExtra("groupinvitekey");
         final String groupid = getIntent().getStringExtra("groupid");
         mGroup = FirebaseDatabase.getInstance().getReference().child("GroupLocationCon").child(groupid).child("Members");
@@ -67,6 +79,66 @@ public class HelloNguoiThan extends AppCompatActivity {
         txtKey.setText(key);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(HelloNguoiThan.this));
+        shareKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = "Đây là mã mời vào nhóm của tôi trên ứng dụng SmartLocationPro - Tìm vị trí người thân và bạn bè , hãy nhập vào và tham gia với tôi : "+key;
+                String shareSub = "Lời mời tham gia nhóm";
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, shareSub);
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, "Share using"));
+            }
+        });
+        changeKey.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // tạo key mới
+                char[] chars1 = "ABCDEF012GHIJKL345MNOPQR678STUVWXYZ9".toCharArray();
+                StringBuilder sb1 = new StringBuilder();
+                Random random1 = new Random();
+                for (int i = 0; i < 6; i++) {
+                    char c1 = chars1[random1.nextInt(chars1.length)];
+                    sb1.append(c1);
+                }
+                randomkeyNew = sb1.toString();
+                // gửi key vừa thay đổi lên firebase database
+                rootRef.child("GroupLocationCon").child(groupid).child("Members").child(mUid).child("inviteKey").setValue(randomkeyNew).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+
+                    }
+                });
+                // xóa key cũ đi tạo key mới với dữ liệu cũ
+                // 1. xóa key cũ
+                rootRef.child("InviteKey").child(key).removeValue();
+                // 2. tạo key mới với dữ liệu cũ
+                String inviteKey = "InviteKey/" + randomkeyNew;
+                Map inviteKeyCon = new HashMap();
+                inviteKeyCon.put("GroupId", groupid);
+                inviteKeyCon.put("NameGroup", groupname);
+                Map inviteKeyConDetail = new HashMap();
+                inviteKeyConDetail.put(inviteKey, inviteKeyCon);
+                rootRef.updateChildren(inviteKeyConDetail, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                        Log.d("ThanhCong","tao key moi voi du lieu cu");
+                    }
+                });
+                //end
+                // cap nhat key o users
+                rootRef.child("Users").child(mUid).child("GroupLocationKey").child(groupid).child("InviteKey").setValue(randomkeyNew).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        Log.d("ThanhCong","doi thanh cong grouplocationcon");
+                    }
+                });
+
+                Toast.makeText(HelloNguoiThan.this, "Đổi thành công.", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
 
     @Override
@@ -80,7 +152,10 @@ public class HelloNguoiThan extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_settings_group) {
-            startActivity(new Intent(HelloNguoiThan.this, SettingsActivity.class));
+            String groupid = getIntent().getStringExtra("groupid");
+            Intent caidatnhom = new Intent(HelloNguoiThan.this, CaiDatNhom.class);
+            caidatnhom.putExtra("groupid",groupid);
+            startActivity(caidatnhom);
         }
         if (item.getItemId() == android.R.id.home) {
             finish();
@@ -222,7 +297,7 @@ public class HelloNguoiThan extends AppCompatActivity {
 
         public void setThumb(String thumbimage) {
             final CircleImageView thumb_image = mView.findViewById(R.id.profileimg);
-            Picasso.get().load(thumbimage).placeholder(R.drawable.acc_box).into(thumb_image);
+            Picasso.get().load(thumbimage).placeholder(R.mipmap.ic_launcher).into(thumb_image);
         }
 
     }

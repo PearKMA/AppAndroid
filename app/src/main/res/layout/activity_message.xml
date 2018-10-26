@@ -9,7 +9,7 @@
     tools:context=".Chat.MessageActivity">
 
     <android.support.v7.widget.Toolbar
-        android:theme="@style/AppTheme.NoActionBar"
+        android:theme="@style/ToolBarTheme.ToolBarStyle"
         android:id="@+id/chat_bar_layout"
         android:layout_width="match_parent"
         android:background="@color/mauChuDao"

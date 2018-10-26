@@ -9,16 +9,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Tạo nhóm chia sẻ vị trí"
+        android:text="Đổi tên nhóm"
         android:textSize="20sp"
         android:textColor="@color/mauDen"
         android:textStyle="bold" />
     <EditText
         android:layout_marginTop="20dp"
-        android:id="@+id/edit_tennhom"
+        android:id="@+id/edit_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Tên nhóm"
+        android:hint="Đổi tên nhóm"
         />
 
     <LinearLayout
@@ -30,7 +30,7 @@
 
         <Button
             android:layout_marginRight="30dp"
-            android:id="@+id/dongytaonhom"
+            android:id="@+id/accept_change_stt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape2"
@@ -38,9 +38,9 @@
             android:text="Đồng ý" />
         <Button
             android:layout_marginLeft="30dp"
-            android:id="@+id/huybotaonhom"
             android:background="@drawable/shape"
             android:textColor="@color/mauTrang"
+            android:id="@+id/decline_change_stt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hủy bỏ" />

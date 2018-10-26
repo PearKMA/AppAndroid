@@ -1,6 +1,7 @@
 package groups.kma.sharelocation.Chat;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,6 +39,7 @@ public class AllUsersActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Tìm bạn bè");
+        toolbar.setTitleTextColor(Color.WHITE);
         search_txt = findViewById(R.id.search_text);
         search_button = findViewById(R.id.search_btn);
         mUsersDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
@@ -111,7 +113,7 @@ public class AllUsersActivity extends AppCompatActivity {
         }
         public void setImage(String image ){
             CircleImageView imageView = mView.findViewById(R.id.profileimg);
-            Picasso.get().load(image).placeholder(R.drawable.acc_box).into(imageView);
+            Picasso.get().load(image).placeholder(R.mipmap.ic_launcher).into(imageView);
         }
     }
 

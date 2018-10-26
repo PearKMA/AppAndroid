@@ -81,7 +81,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         }else{
             holder.messageText.setVisibility(View.INVISIBLE);
             holder.messageText.setPadding(0,0,0,0);
-
             Picasso.get().load(messages.getMessage()).placeholder(R.drawable.icon_online).into(holder.messageImg);
         }
 

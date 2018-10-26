@@ -7,6 +7,7 @@
     tools:context=".Chat.AllUsersActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
+        android:theme="@style/ToolBarTheme.ToolBarStyle"
         android:background="@color/mauChuDao"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

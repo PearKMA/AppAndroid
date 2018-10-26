@@ -83,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                 txtProfileName.setText(display_name);
                 txtProfileStatus.setText(status);
-                Picasso.get().load(image).placeholder(R.drawable.acc_box).into(imgProfile);
+                Picasso.get().load(image).placeholder(R.mipmap.ic_launcher).into(imgProfile);
 
                 //Friends list and request
                 // check trang thai nguoi dung

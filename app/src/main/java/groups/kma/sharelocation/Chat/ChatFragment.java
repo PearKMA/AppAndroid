@@ -42,30 +42,23 @@ public class ChatFragment extends Fragment {
     String online_user_id;
 
     public ChatFragment() {
-        // Required empty public constructor
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        myMainView = inflater.inflate(R.layout.fragment_chat,container,false);
+        myMainView = inflater.inflate(R.layout.fragment_chat, container, false);
         myChatsList = (RecyclerView) myMainView.findViewById(R.id.chats_list);
-
         mAuth = FirebaseAuth.getInstance();
         online_user_id = mAuth.getCurrentUser().getUid();
-
         mFriendDatabase = FirebaseDatabase.getInstance().getReference().child("Friends").child(online_user_id);
         mUserDatabase = FirebaseDatabase.getInstance().getReference().child("Users");
-
         myChatsList.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
-
         myChatsList.setLayoutManager(linearLayoutManager);
-
-        // Inflate the layout for this fragment
         return myMainView;
     }
 
@@ -73,7 +66,7 @@ public class ChatFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        FirebaseRecyclerAdapter<Chats,ChatFragment.ChatsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Chats, ChatsViewHolder>(
+        FirebaseRecyclerAdapter<Chats, ChatFragment.ChatsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Chats, ChatsViewHolder>(
                 Chats.class,
                 R.layout.item_user_singer_layout,
                 ChatFragment.ChatsViewHolder.class,
@@ -90,24 +83,22 @@ public class ChatFragment extends Fragment {
                         String thumbimage = dataSnapshot.child("photoUrl").getValue().toString();
                         String user_status = dataSnapshot.child("status").getValue().toString();
 
-                        if(dataSnapshot.hasChild("online")){
+                        if (dataSnapshot.hasChild("online")) {
                             String online_status = (String) dataSnapshot.child("online").getValue().toString();
                             viewHolder.setUserOnline(online_status);
                         }
-
-
                         viewHolder.setUsername(username);
                         viewHolder.setThumb(thumbimage);
                         viewHolder.setUserStatus(user_status);
                         viewHolder.mView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if(dataSnapshot.child("online").exists()) {
+                                if (dataSnapshot.child("online").exists()) {
                                     Intent chatIntent = new Intent(getContext(), MessageActivity.class);
                                     chatIntent.putExtra("user_id", list_user_id);
                                     chatIntent.putExtra("user_name", username);
                                     startActivity(chatIntent);
-                                }else{
+                                } else {
                                     mUserDatabase.child(list_user_id).child("online").setValue(ServerValue.TIMESTAMP)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
@@ -136,28 +127,30 @@ public class ChatFragment extends Fragment {
 
     }
 
-    public static class ChatsViewHolder extends RecyclerView.ViewHolder{
+    public static class ChatsViewHolder extends RecyclerView.ViewHolder {
         View mView;
+
         public ChatsViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
         }
-        public void setUsername(String name){
+
+        public void setUsername(String name) {
             TextView usname = mView.findViewById(R.id.textView1);
             usname.setText(name);
         }
 
         public void setThumb(String thumbimage) {
             final CircleImageView thumb_image = mView.findViewById(R.id.profileimg);
-            Picasso.get().load(thumbimage).placeholder(R.drawable.acc_box).into(thumb_image);
+            Picasso.get().load(thumbimage).placeholder(R.mipmap.ic_launcher).into(thumb_image);
 
         }
 
         public void setUserOnline(String online_status) {
             ImageView online_status_view = mView.findViewById(R.id.icon_online);
-            if(online_status.equals("true")){
+            if (online_status.equals("true")) {
                 online_status_view.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 online_status_view.setVisibility(View.INVISIBLE);
             }
 

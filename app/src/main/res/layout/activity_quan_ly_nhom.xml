@@ -8,6 +8,7 @@
     tools:context=".NguoiThan.QuanLyNhomActivity">
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
+        android:theme="@style/ToolBarTheme.ToolBarStyle"
         android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:background="@color/mauChuDao"

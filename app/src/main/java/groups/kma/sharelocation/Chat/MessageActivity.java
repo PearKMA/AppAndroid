@@ -87,27 +87,21 @@ public class MessageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-
         messageReceiverId = getIntent().getExtras().get("user_id").toString();
         messageReceiverName = getIntent().getExtras().get("user_name").toString();
-
         rootRef = FirebaseDatabase.getInstance().getReference();
         MessageImageStorageRef = FirebaseStorage.getInstance().getReference().child("Messages_Pictures");
         ChatToolbar = findViewById(R.id.chat_bar_layout);
         setSupportActionBar(ChatToolbar);
         loadingBar = new ProgressDialog(this);
-
         mAuth= FirebaseAuth.getInstance();
         messageSenderId = mAuth.getCurrentUser().getUid();
-
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowCustomEnabled(true);
-
         LayoutInflater layoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View action_bar_view = layoutInflater.inflate(R.layout.chat_custom_bar,null);
         actionBar.setCustomView(action_bar_view);
-
         userNameTitle = findViewById(R.id.custom_profile_name);
         userLastSeen = findViewById(R.id.custom_user_last_seen);
         userChatProfileImage = findViewById(R.id.custom_profile_image);
@@ -121,17 +115,14 @@ public class MessageActivity extends AppCompatActivity {
         userMessageList.setHasFixedSize(true);
         userMessageList.setLayoutManager(linearLayoutManager);
         userMessageList.setAdapter(messageAdapter);
-
         FetchMessages();
-
-
         userNameTitle.setText(messageReceiverName);
         rootRef.child("Users").child(messageReceiverId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final String online = dataSnapshot.child("online").getValue().toString();
                 final String userThumb = dataSnapshot.child("photoUrl").getValue().toString();
-                Picasso.get().load(userThumb).placeholder(R.drawable.acc_box).into(userChatProfileImage);
+                Picasso.get().load(userThumb).placeholder(R.mipmap.ic_launcher).into(userChatProfileImage);
                 if(online.equals("true")){
                     userLastSeen.setText("Online");
                 }else{
@@ -140,15 +131,11 @@ public class MessageActivity extends AppCompatActivity {
                     String lastSeenDisplayTime = getTime.getTimeAgo(last_seen,getApplicationContext()).toString();
                     userLastSeen.setText(lastSeenDisplayTime);
                 }
-
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
         SendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -160,12 +147,9 @@ public class MessageActivity extends AppCompatActivity {
             public void onRefresh() {
                 mCurrentPage++;
                 itemPos=0;
-
                 FetchMoreMessages();
-
             }
         });
-
         SelectImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -194,7 +178,6 @@ public class MessageActivity extends AppCompatActivity {
                 if(itemPos==1){
                     mLastKey = messageKey;
                 }
-
 
                 messageAdapter.notifyDataSetChanged();
                 userMessageList.scrollToPosition(messagesList.size()-1);

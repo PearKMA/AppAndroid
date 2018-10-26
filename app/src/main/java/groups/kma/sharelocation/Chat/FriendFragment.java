@@ -40,8 +40,6 @@ public class FriendFragment extends Fragment {
     public FriendFragment() {
         // Required empty public constructor
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -162,7 +160,7 @@ public class FriendFragment extends Fragment {
 
         public void setThumb(String thumbimage) {
             final CircleImageView thumb_image = mView.findViewById(R.id.profileimg);
-            Picasso.get().load(thumbimage).placeholder(R.drawable.acc_box).into(thumb_image);
+            Picasso.get().load(thumbimage).placeholder(R.mipmap.ic_launcher).into(thumb_image);
         }
 
         public void setUserOnline(String online_status) {

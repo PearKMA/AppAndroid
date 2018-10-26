@@ -1,5 +1,6 @@
 package groups.kma.sharelocation.NguoiThan;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -34,7 +35,7 @@ import groups.kma.sharelocation.R;
 
 public class QuanLyNhomActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
-    private DatabaseReference mGroupDatabase;
+    private DatabaseReference mGroupDatabase,rootRef;
     private DatabaseReference mGroupConDatabase;
     private FirebaseAuth mAuth;
     private String mUid;
@@ -46,6 +47,7 @@ public class QuanLyNhomActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.danhsachnhom);
         mAuth = FirebaseAuth.getInstance();
         mUid = mAuth.getCurrentUser().getUid();
+        rootRef=FirebaseDatabase.getInstance().getReference();
         mGroupDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child(mUid).child("GroupLocationKey");
         mGroupConDatabase = FirebaseDatabase.getInstance().getReference().child("GroupLocationCon");
         mRecyclerView.setHasFixedSize(true);
@@ -95,7 +97,7 @@ public class QuanLyNhomActivity extends AppCompatActivity {
                                 // Trường hợp 1 : khi mà bạn là admin
                                 if(membertype.equals("admin")) {
                                     CharSequence options[] = new CharSequence[]{
-                                            "Quản lý nhóm " + groupname, "Gửi tin nhắn"
+                                            "Quản lý nhóm " + groupname, "Chat nhóm"
                                     };
                                     AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyNhomActivity.this);
                                     builder.setTitle("Chọn tính năng");
@@ -108,7 +110,6 @@ public class QuanLyNhomActivity extends AppCompatActivity {
                                                     quanlyIntent.putExtra("groupid", groupid);
                                                     quanlyIntent.putExtra("groupname",groupname);
                                                     quanlyIntent.putExtra("groupinvitekey", finalMemberkey);
-                                                    Toast.makeText(QuanLyNhomActivity.this, ""+finalMemberkey, Toast.LENGTH_SHORT).show();
                                                     startActivity(quanlyIntent);
                                                 } else {
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyNhomActivity.this);
@@ -134,7 +135,7 @@ public class QuanLyNhomActivity extends AppCompatActivity {
                                 }else{
                                     // Trường hợp 2
                                     CharSequence options[] = new CharSequence[]{
-                                            "Chat nhóm"
+                                            "Chat nhóm","Rời Khỏi Nhóm"
                                     };
                                     AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyNhomActivity.this);
                                     builder.setTitle("Chọn tính năng");
@@ -147,6 +148,40 @@ public class QuanLyNhomActivity extends AppCompatActivity {
                                                 chatnhomIntent.putExtra("groupname",groupname);
                                                 chatnhomIntent.putExtra("groupid",groupid);
                                                 startActivity(chatnhomIntent);
+                                            }
+                                            if(i==1){
+                                                // rời khỏi nhóm
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(QuanLyNhomActivity.this);
+                                                builder.setTitle("Rời nhóm");
+                                                builder.setMessage("Bạn có muốn thoát khỏi nhóm không ?");
+                                                builder.setCancelable(false);
+                                                builder.setPositiveButton("Hủy bỏ", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        dialogInterface.dismiss();
+                                                    }
+                                                });
+                                                builder.setNegativeButton("Đồng ý", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                                        dialogInterface.dismiss();
+                                                        rootRef.child("Users").child(mUid).child("GroupLocationKey").child(groupid).removeValue(new DatabaseReference.CompletionListener() {
+                                                            @Override
+                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                                                Toast.makeText(QuanLyNhomActivity.this, "Rời nhóm thành công", Toast.LENGTH_SHORT).show();
+                                                            }
+                                                        });
+                                                        rootRef.child("GroupLocationCon").child(groupid).child("Members").child(mUid).removeValue(new DatabaseReference.CompletionListener() {
+                                                            @Override
+                                                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                                                            }
+                                                        });
+                                                        QuanLyNhomActivity.this.finish();
+                                                    }
+                                                });
+                                                AlertDialog alertDialog = builder.create();
+                                                alertDialog.show();
                                             }
 
                                         }
@@ -182,7 +217,7 @@ public class QuanLyNhomActivity extends AppCompatActivity {
             if (!thumbimage.equals("default")) {
                 //Picasso.get().load(image).placeholder(R.drawable.acc_box).into(mImage);
                 Picasso.get().load(thumbimage).networkPolicy(NetworkPolicy.OFFLINE)
-                        .placeholder(R.drawable.acc_box).into(thumb_image, new Callback() {
+                        .placeholder(R.mipmap.ic_launcher).into(thumb_image, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -190,12 +225,12 @@ public class QuanLyNhomActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Exception e) {
-                        Picasso.get().load(thumbimage).placeholder(R.drawable.acc_box).into(thumb_image);
+                        Picasso.get().load(thumbimage).placeholder(R.mipmap.ic_launcher).into(thumb_image);
                     }
                 });
 
             }
-            Picasso.get().load(thumbimage).placeholder(R.drawable.acc_box).into(thumb_image);
+            Picasso.get().load(thumbimage).placeholder(R.mipmap.ic_launcher).into(thumb_image);
         }
 
 

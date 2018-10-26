@@ -12,8 +12,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_SMS"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:name=".Chat.OfflineMode"
@@ -33,11 +33,6 @@
             android:name=".LoginAction.ActivityDangNhap"
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
         <activity android:name=".LoginAction.ActivityDangKy" />
@@ -75,30 +70,32 @@
             android:name=".Chat.MessageActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".NguoiThan.NhomNguoiThan"
-            android:label="@string/title_activity_nguoi_than"
-            android:theme="@style/AppTheme" />
-        <activity
             android:name=".VungAnToan.VungAnToanActivity"
             android:label="@string/title_activity_vung_an_toan"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".MapAction.MapsActivity"
-            android:label="@string/title_activity_maps"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
         <activity android:name=".LienKetAction.ThamGiaActivity" />
         <activity android:name=".VungAnToan.BaoDongActivity" />
         <activity
             android:name=".NguoiThan.NhomNguoiThanMapActivity"
             android:label="@string/title_activity_nhom_nguoi_than_map" />
-        <activity android:name=".NguoiThan.QuanLyNhomActivity"></activity>
-        <activity android:name=".NguoiThan.HelloNguoiThan"></activity>
-        <activity android:name=".NguoiThan.GroupChatActivity"></activity>
+        <activity android:name=".NguoiThan.QuanLyNhomActivity" />
+        <activity android:name=".NguoiThan.HelloNguoiThan" />
+        <activity android:name=".NguoiThan.GroupChatActivity" />
+
         <receiver android:name=".VungAnToan.RunInner">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".NguoiThan.CaiDatNhom" />
+        <activity android:name=".Welcome">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

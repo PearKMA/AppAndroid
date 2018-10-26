@@ -33,14 +33,17 @@
             android:id="@+id/accept_change_stt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/shape2"
+            android:textColor="@color/mauTrang"
             android:text="Đồng ý" />
         <Button
             android:layout_marginLeft="30dp"
+            android:background="@drawable/shape"
+            android:textColor="@color/mauTrang"
             android:id="@+id/decline_change_stt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Hủy bỏ" />
-
     </LinearLayout>
 
 

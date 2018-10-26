@@ -55,7 +55,6 @@ import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import groups.kma.sharelocation.MapAction.MapsActivity;
 import groups.kma.sharelocation.R;
 
 public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
@@ -377,7 +376,7 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
 
         public void setThumb(String thumbimage) {
             final CircleImageView thumb_image = mView.findViewById(R.id.imgCircle);
-            Picasso.get().load(thumbimage).placeholder(R.drawable.acc_box).into(thumb_image);
+            Picasso.get().load(thumbimage).placeholder(R.mipmap.ic_launcher).into(thumb_image);
         }
     }
 
