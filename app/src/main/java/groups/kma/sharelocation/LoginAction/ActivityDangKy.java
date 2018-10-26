@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -24,6 +25,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.security.MessageDigest;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.SecretKeySpec;
+
 import groups.kma.sharelocation.R;
 import groups.kma.sharelocation.model.Users;
 
@@ -33,6 +39,9 @@ public class ActivityDangKy extends AppCompatActivity {
     private EditText edtPassWord1;
     private EditText edtConfirmPW;
     private CheckBox chkBoxTerms;
+    String outputPass;
+    String passwordEcn;
+    String AES="AES";
 
     private DatabaseReference mRef;
 
@@ -143,7 +152,26 @@ public class ActivityDangKy extends AppCompatActivity {
 
         FirebaseUser current_user = FirebaseAuth.getInstance().getCurrentUser();
         String uid = current_user.getUid();
-        Users users = new Users(userName,emailAD,password,status,image,thumbimage,DeviceToken);
+
+        // lúc này sẽ mã hóa password
+        try {
+            //pass word đã mã hóa
+            passwordEcn = encrypt(password);
+            Toast.makeText(ActivityDangKy.this, "Mã hóa"+passwordEcn, Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // hàm giải mã
+        /*
+        try {
+            String x = decrypt(password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        */
+        //password
+        Users users = new Users(userName,emailAD,passwordEcn,status,image,thumbimage,DeviceToken);
         mRef.child(uid).setValue(users, new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(@Nullable DatabaseError databaseError, @NonNull DatabaseReference databaseReference) {
@@ -154,6 +182,35 @@ public class ActivityDangKy extends AppCompatActivity {
                 }
             }
         });
+    }
+    /* giải mã
+    private String decrypt(String password) throws Exception {
+        SecretKeySpec key = generateKey(password);
+        Cipher c = Cipher.getInstance(AES);
+        c.init(Cipher.DECRYPT_MODE,key);
+        byte[] decodeValue = Base64.decode(password,Base64.DEFAULT);
+        byte[] decValue = c.doFinal(decodeValue);
+        String decryptValue = new String(decValue);
+        return decryptValue;
+    } */
+
+    private String encrypt(String password) throws Exception {
+        SecretKeySpec key = generateKey(password);
+        Cipher c = Cipher.getInstance(AES);
+        c.init(Cipher.ENCRYPT_MODE,key);
+        byte[] encVal = c.doFinal(password.getBytes());
+        String encryptedValue = Base64.encodeToString(encVal,Base64.DEFAULT);
+        return encryptedValue;
+    }
+
+    private SecretKeySpec generateKey(String password) throws Exception {
+        final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] bytes = password.getBytes("UTF-8");
+        digest.update(bytes,0,bytes.length);
+        byte[] key = digest.digest();
+        SecretKeySpec secretKeySpec = new SecretKeySpec(key,"AES");
+        return secretKeySpec;
+
     }
 
     public void tvSignIn(View view) {
