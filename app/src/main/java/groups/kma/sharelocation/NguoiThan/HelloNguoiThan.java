@@ -239,7 +239,6 @@ public class HelloNguoiThan extends AppCompatActivity {
                                                     @Override
                                                     public void onClick(DialogInterface dialogInterface, int i) {
                                                         dialogInterface.dismiss();
-                                                        Toast.makeText(HelloNguoiThan.this, "" + uidmember, Toast.LENGTH_SHORT).show();
                                                         final String groupid = getIntent().getStringExtra("groupid");
                                                         rootRef.child("Users").child(uidmember).child("GroupLocationKey").child(groupid).removeValue(new DatabaseReference.CompletionListener() {
                                                             @Override

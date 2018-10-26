@@ -243,7 +243,6 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
         Location location = locationManager.getLastKnownLocation(bestProvider);
         //Location locationx = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (location != null) {
-            Toast.makeText(this, "Location khong null", Toast.LENGTH_SHORT).show();
             if (null != currentLocationMarker) {
                 currentLocationMarker.remove();
             }
