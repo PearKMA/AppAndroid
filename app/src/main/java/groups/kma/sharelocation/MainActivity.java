@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity
                 }
 
             }, new IntentFilter("ACTION_MSG_SEND"));
-            String mess1 = "User: " + nameUser + " đã gửi tín hiệu khẩn cấp tại vị trí " +
+            String mess1 = "Khẩn cấp: " + nameUser + " cần trợ giúp! Vị trí " +
                     lastKnownLocation;
 
             Calendar ccalForDate=Calendar.getInstance();
@@ -235,6 +235,7 @@ public class MainActivity extends AppCompatActivity
             String currentDate=currentDateFormat.format(ccalForDate.getTime());
 
             String mess = mess1 + " lúc " + currentDate;
+            Log.e("TAG",""+mess);
             smsManager.sendTextMessage(phone, null, mess, pendingIntent,
                     null);
     }
