@@ -93,23 +93,18 @@ public class VungAnToanActivity extends Fragment{
                         }
                         Toast.makeText(getContext(), "Đã thiết lập! Hủy bỏ bằng cách nhập 0!"
                                 , Toast.LENGTH_SHORT).show();
-                        edtDistance.setText("");
                     }
                 }
-            }if (distance.equals("0")){
+            }else if (distance.equals("0")){
                 Toast.makeText(getContext(),"Hủy thiết lập!",Toast.LENGTH_SHORT).show();
                 mDatabase.child("AlertArea").setValue("");
-                edtDistance.setText("");
+
             }
-            if (size!=0){
-                Toast.makeText(getContext(), "Vui lòng điền khoảng cách và chọn đối tượng cần báo động!",
-                        Toast.LENGTH_SHORT).show();
-            }
-        }else {
+        }else if (distance.equals("")){
                 Toast.makeText(getContext(), "Vui lòng điền khoảng cách và chọn đối tượng cần báo động!",
                         Toast.LENGTH_SHORT).show();
         }
-
+        edtDistance.setText("");
     }
 
     private void getDS() {

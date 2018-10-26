@@ -52,7 +52,6 @@ public class RunInner extends BroadcastReceiver implements LocationListener {
             mDatabase = FirebaseDatabase.getInstance().getReference();
             UserId=mAuth.getCurrentUser().getUid();
             getLocation(context);
-            getInfo(context);
         }
 
     }
@@ -111,14 +110,26 @@ public class RunInner extends BroadcastReceiver implements LocationListener {
         String bestProvider = locationManager.getBestProvider(criteria, true);
         Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (location != null) {
-            myLat=location.getLatitude();
-            myLong=location.getLongitude();
-            gettedLocation="OK";
+            isLocationNotNull(context,location);
+        }
+        else
+        {
+            location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location!= null) {
+                isLocationNotNull(context, location);
+            }
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+                    0, this);
         }
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
                 0, this);
-    }
 
+    }
+    private void isLocationNotNull(Context context,Location location){
+        myLat=location.getLatitude();
+        myLong=location.getLongitude();
+        getInfo(context);
+    }
     private void xuLyNotification(Context context,String userName) {
         NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(context, "Alert_Area")
                 .setSmallIcon(R.drawable.notification)

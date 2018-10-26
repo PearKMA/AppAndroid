@@ -187,11 +187,11 @@ public class MainActivity extends AppCompatActivity
                isLocationNotNull(location);
            }else {
                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-               isLocationNotNull(location);
+               if (location!=null) {
+                   isLocationNotNull(location);
+               }
                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
                        0, this);
-               Toast.makeText(getApplicationContext(),"Location null rồi, thay gps đi!",Toast.LENGTH_SHORT)
-                       .show();
            }
            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
                    0, this);
