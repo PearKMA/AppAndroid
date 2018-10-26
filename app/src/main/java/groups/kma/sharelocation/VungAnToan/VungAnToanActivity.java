@@ -1,26 +1,21 @@
 package groups.kma.sharelocation.VungAnToan;
 
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -32,23 +27,22 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import groups.kma.sharelocation.R;
+import groups.kma.sharelocation.model.ListGiamSat;
 
-public class VungAnToanActivity extends Fragment implements LocationListener{
-    private LocationManager locationManager;
+public class VungAnToanActivity extends Fragment{
+
     private Location location;
     private FirebaseAuth mAuth;
     private DatabaseReference mDatabase;
     private String UserId;
     private ArrayList<String> dsFriendId;
-    private Double myLat,myLong;
-    private int distance=2000;
-    int notificationId;
     ArrayList<String> arrayList;
     ArrayAdapter<String> adapter;
-    ListView lvPhoneAlert;
+    ListView lvDistance;
     EditText edtDistance;
     FloatingActionButton btnSet;
-    private ArrayList<SharedLocation> list;
+    private ArrayList<ListGiamSat> listName;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -58,41 +52,91 @@ public class VungAnToanActivity extends Fragment implements LocationListener{
         arrayList=new ArrayList<>();
         adapter=new ArrayAdapter<String>(getContext(),android.R.layout.simple_list_item_multiple_choice,
                 arrayList);
-        lvPhoneAlert=view.findViewById(R.id.lvPhoneAlert);
-        getLocation();
+        lvDistance= view.<ListView>findViewById(R.id.lvDs);
+        lvDistance.setAdapter(adapter);
+        lvDistance.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        btnSet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setVungAnToan(view);
+            }
+        });
+
         dsFriendId=new ArrayList<>();
-        list=new ArrayList<>();
+        listName=new ArrayList<ListGiamSat>();
         mAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         UserId=mAuth.getCurrentUser().getUid();
         getFriendId();
-
         return view;
     }
 
-    private void hienDS() {
-        Log.e("Ktra",""+list.size());
+    private void setVungAnToan(View view) {
+        mDatabase.child("AlertArea").setValue("");
+        String distance= edtDistance.getText().toString();
+        distance.trim();
+
+        SparseBooleanArray checked = lvDistance.getCheckedItemPositions();
+        int size = checked.size(); // number of name-value pairs in the array
+        if (!distance.equals("")){
+            if (!distance.equals("0")&&size!=0) {
+                mDatabase.child("AlertArea").child(UserId).child("Distance").setValue(Double.valueOf(distance));
+                for (int i = 0; i < size; i++) {
+                    int key = checked.keyAt(i);
+                    boolean value = checked.get(key);
+                    if (value) {
+                        for (ListGiamSat item : listName) {
+                            if (lvDistance.getItemAtPosition(key).equals(item.getName())) {
+                                mDatabase.child("AlertArea").child(UserId).child("Friends").child("" + i).
+                                        setValue(item);
+                            }
+                        }
+                        Toast.makeText(getContext(), "Đã thiết lập! Hủy bỏ bằng cách nhập 0!"
+                                , Toast.LENGTH_SHORT).show();
+                        edtDistance.setText("");
+                    }
+                }
+            }if (distance.equals("0")){
+                Toast.makeText(getContext(),"Hủy thiết lập!",Toast.LENGTH_SHORT).show();
+                mDatabase.child("AlertArea").setValue("");
+                edtDistance.setText("");
+            }
+            if (size!=0){
+                Toast.makeText(getContext(), "Vui lòng điền khoảng cách và chọn đối tượng cần báo động!",
+                        Toast.LENGTH_SHORT).show();
+            }
+        }else {
+                Toast.makeText(getContext(), "Vui lòng điền khoảng cách và chọn đối tượng cần báo động!",
+                        Toast.LENGTH_SHORT).show();
+        }
+
     }
 
-
-    private void getDistance() {
-        for (String key:dsFriendId) {
+    private void getDS() {
+        for (final String key:dsFriendId) {
             mDatabase.child("LocationUsers").child(key).
                         addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
+                                    String name="";
+                                    Double lat;
+                                    Double lon;
+                                    int i=0;
                                     for (DataSnapshot childSbapshot : dataSnapshot.getChildren()) {
-                                        String date=String.valueOf(childSbapshot.child("date").getValue());
-                                        String lat=String.valueOf(childSbapshot.child("latitude").getValue());
-                                        String lon=String.valueOf(childSbapshot.child("longtitude").getValue());
-                                        String name=String.valueOf(childSbapshot.child("name").getValue());
-                                        String time=String.valueOf(childSbapshot.child("time").getValue());
-                                        SharedLocation sl=new SharedLocation(date,
-                                                Double.valueOf(lat),
-                                                Double.valueOf(lon),
-                                                name,time);
-                                        taoDs(sl);
+                                        name = String.valueOf(childSbapshot.child("name").getValue());
+                                        lat =(Double) childSbapshot.child("latitude").getValue();
+                                        lon =(Double) childSbapshot.child("latitude").getValue();
+                                        for (ListGiamSat ds : listName) {
+                                            if (name.equals(ds.getName())){
+                                                i=1;
+                                            }
+                                        }
+                                        if (i==0){
+                                            listName.add(new ListGiamSat(name, key,lat,lon));
+                                            arrayList.add(name);
+                                            adapter.notifyDataSetChanged();
+                                        }
                                     }
                                 }
                             }
@@ -104,30 +148,7 @@ public class VungAnToanActivity extends Fragment implements LocationListener{
         }
     }
 
-    private void taoDs(SharedLocation sl) {
-        list.add(sl);
 
-    }
-
-    private void getLocation() {
-        if ( Build.VERSION.SDK_INT >= 23 &&
-                ContextCompat.checkSelfPermission( getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission( getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return  ;
-        }
-        locationManager = (LocationManager)getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-        /*Sử dụng lớp Criteria để yêu cầu nhà cung cấp xử lý chính xác những số liệu có sẵn như:
-        vĩ độ và kinh độ, tốc độ, độ cao, chi phí và yêu về cầu năng lương điện. */
-        String bestProvider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(bestProvider);
-        if (location != null) {
-            myLat=location.getLatitude();
-            myLong=location.getLongitude();
-        }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-                0, this);
-    }
     private void getFriendId(){
             mDatabase.child("Friends").child(UserId).
                     addValueEventListener(new ValueEventListener() {
@@ -135,11 +156,11 @@ public class VungAnToanActivity extends Fragment implements LocationListener{
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.getChildren()!=null)
                             {
+                                dsFriendId.clear();
                                 for(DataSnapshot friendKey : dataSnapshot.getChildren()) {
                                     dsFriendId.add(friendKey.getKey());
                                 }
-
-                                getDistance();
+                                getDS();
                             }
                         }
 
@@ -148,37 +169,5 @@ public class VungAnToanActivity extends Fragment implements LocationListener{
 
                         }
                     });
-    }
-    @Override
-    public void onLocationChanged(Location location) {
-        myLat=location.getLatitude();
-        myLong=location.getLongitude();
-    }
-    public static double distanceBetween2Points(double la1, double lo1,
-                                                double la2, double lo2) {
-        int R = 6378137;
-        double dLat = (la2 - la1) * (Math.PI / 180);
-        double dLon = (lo2 - lo1) * (Math.PI / 180);
-        double la1ToRad = la1 * (Math.PI / 180);
-        double la2ToRad = la2 * (Math.PI / 180);
-        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(la1ToRad)
-                * Math.cos(la2ToRad) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
-        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        double d = R * c;
-        return d; //result = meter
-    }
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
     }
 }
