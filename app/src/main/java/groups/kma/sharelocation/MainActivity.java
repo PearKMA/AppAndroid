@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -112,6 +113,7 @@ public class MainActivity extends AppCompatActivity
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     Users users = dataSnapshot.getValue(Users.class);
                     String name = users.getUserName();
+                    nameUser=name;
                     String email = users.getEmail();
                     navUsername.setText(name);
                     navEmail.setText(email);
@@ -183,45 +185,62 @@ public class MainActivity extends AppCompatActivity
         Location location = locationManager.getLastKnownLocation(bestProvider);
            if (location != null) {
                lastKnownLocation=location.getLatitude()+","+location.getLatitude();
-               if (BaoDongActivity.smsPhone!=null) {
-                   final SmsManager smsManager = SmsManager.getDefault();
-                   Intent intent = new Intent("ACTION_MSG_SEND");
-                   final PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext()
-                           , 0, intent, 0);
-                   registerReceiver(new BroadcastReceiver() {
-                       @Override
-                       public void onReceive(Context context, Intent intent) {
-                           int result = getResultCode();
-                           String msg = "Gửi thành công!";
-                           if (result != Activity.RESULT_OK) {
-                               msg = "Có lỗi xảy ra, vui lòng thử lại!";
-                           }
-                           Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+               String UserId = mAuth.getCurrentUser().getUid();
+               DatabaseReference mDatabase=firebaseDatabase.getReference().child("AlertSmS").child(UserId);
+               mDatabase.addValueEventListener(new ValueEventListener() {
+                   @Override
+                   public void onDataChange(DataSnapshot dataSnapshot) {
+                       if (dataSnapshot.exists()){
+                           String phone =dataSnapshot.child("phone").getValue(String.class);
+                            send(lastKnownLocation,phone);
+                       }else {
+                           Toast.makeText(getApplicationContext(),"Có lỗi khi thiết lập số điện thoại!",
+                                   Toast.LENGTH_SHORT).show();
                        }
+                   }
 
-                   }, new IntentFilter("ACTION_MSG_SEND"));
-                   String mess1 = "User: " + nameUser + " đã gửi tín hiệu khẩn cấp tại vị trí " +
-                           lastKnownLocation;
+                   @Override
+                   public void onCancelled(DatabaseError databaseError) {
 
-                   Calendar ccalForDate=Calendar.getInstance();
-                   SimpleDateFormat currentDateFormat = new SimpleDateFormat("hh:mm a dd/MM");
-                   String currentDate=currentDateFormat.format(ccalForDate.getTime());
-
-                   String mess = mess1 + " lúc " + currentDate;
-                   smsManager.sendTextMessage(BaoDongActivity.smsPhone, null, mess, pendingIntent,
-                           null);
-               }else {
-                   Toast.makeText(getApplicationContext(),"Có lỗi khi thiết lập số điện thoại!",
-                           Toast.LENGTH_SHORT).show();
-               }
+                   }
+               });
            }
            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
                    0, this);
 
        }
 
+    private void send(String lastKnownLocation,String phone) {
+            final SmsManager smsManager = SmsManager.getDefault();
+            Intent intent = new Intent("ACTION_MSG_SEND");
+            final PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext()
+                    , 0, intent, 0);
+            registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    int result = getResultCode();
+                    String msg = "Gửi thành công!";
+                    if (result != Activity.RESULT_OK) {
+                        msg = "Có lỗi xảy ra, vui lòng thử lại!";
+                    }
+                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                }
 
-       @Override
+            }, new IntentFilter("ACTION_MSG_SEND"));
+            String mess1 = "User: " + nameUser + " đã gửi tín hiệu khẩn cấp tại vị trí " +
+                    lastKnownLocation;
+
+            Calendar ccalForDate=Calendar.getInstance();
+            SimpleDateFormat currentDateFormat = new SimpleDateFormat("hh:mm a dd/MM");
+            String currentDate=currentDateFormat.format(ccalForDate.getTime());
+
+            String mess = mess1 + " lúc " + currentDate;
+            smsManager.sendTextMessage(phone, null, mess, pendingIntent,
+                    null);
+    }
+
+
+    @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser crUser = mAuth.getCurrentUser();
