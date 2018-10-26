@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -234,16 +235,11 @@ public class GroupChatActivity extends AppCompatActivity {
         });
     }
 
-    private void DisplayMessages(DataSnapshot dataSnapshot) {
-        Iterator iterator = dataSnapshot.getChildren().iterator();
-        while(iterator.hasNext()){
-            String chatDate = (String)((DataSnapshot)iterator.next()).getValue();
-            String chatId = (String)((DataSnapshot)iterator.next()).getValue();
-            String chatMessage = (String)((DataSnapshot)iterator.next()).getValue();
-            String chatName = (String)((DataSnapshot)iterator.next()).getValue();
-            String chatTime = (String)((DataSnapshot)iterator.next()).getValue();
-            display_text.append(chatName + " :\n"+chatMessage+"\n"+chatTime+"   "+chatDate+"\n\n\n"+chatId);
-            scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
         }
+        return super.onOptionsItemSelected(item);
     }
 }

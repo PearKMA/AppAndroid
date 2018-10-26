@@ -247,6 +247,7 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
                 currentLocationMarker.remove();
             }
             mMap.clear();
+            myLocationMove(location);
             onLocationChanged(location);
             myLocation(location);
         }
