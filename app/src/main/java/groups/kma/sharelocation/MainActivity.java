@@ -47,6 +47,7 @@ import groups.kma.sharelocation.LoginAction.ActivityDangNhap;
 import groups.kma.sharelocation.MapAction.MapsActivity;
 import groups.kma.sharelocation.NguoiThan.NhomNguoiThan;
 import groups.kma.sharelocation.NguoiThan.NhomNguoiThanMapActivity;
+import groups.kma.sharelocation.NguoiThan.QuanLyNhomActivity;
 import groups.kma.sharelocation.VungAnToan.BaoDongActivity;
 import groups.kma.sharelocation.VungAnToan.VungAnToanActivity;
 import groups.kma.sharelocation.model.Users;
@@ -261,7 +262,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_nguoithan) {
             startActivity(new Intent(MainActivity.this, NhomNguoiThanMapActivity.class));
         } else if (id == R.id.nav_quanlynhom) {
-            startActivity(new Intent(MainActivity.this,MapsActivity.class));
+            startActivity(new Intent(MainActivity.this,QuanLyNhomActivity.class));
         } else if (id == R.id.nav_guitin) {
             setTitle("Gửi tin");
             ChatActivity chatActivity = new ChatActivity();

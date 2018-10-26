@@ -39,10 +39,8 @@ import groups.kma.sharelocation.model.MemberLocations;
 
 public class LienKetActivity extends Fragment {
     private View view;
-    private TextView malienket;
-    private Button btnCreate, btnThamGia, btnTaoNhom;
+    private Button btnThamGia, btnTaoNhom;
     private ProgressDialog mProgressDialog;
-    private DatabaseReference mGroupKey;
     private FirebaseAuth mAuth;
     private FirebaseUser mCurrentUser;
     private String uID = "";
@@ -56,14 +54,10 @@ public class LienKetActivity extends Fragment {
         view = inflater.inflate(R.layout.activity_lien_ket, container, false);
         btnTaoNhom = view.findViewById(R.id.btnTaoNhom);
         btnThamGia = view.findViewById(R.id.btnThamGiaNhom);
-        //malienket = view.findViewById(R.id.malienket);
-        //btnCreate = view.findViewById(R.id.btnCreate);
-        //CreateRandom();
         mAuth = FirebaseAuth.getInstance();
         mCurrentUser = mAuth.getCurrentUser();
         uID = mCurrentUser.getUid();
         rootRef = FirebaseDatabase.getInstance().getReference();
-
         btnThamGia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,43 +95,6 @@ public class LienKetActivity extends Fragment {
                     mProgressDialog.setTitle("Tạo nhóm");
                     mProgressDialog.setMessage("Đang tạo nhóm vui lòng đợi...");
                     mProgressDialog.show();
-                    DatabaseReference group_location = rootRef.child("Users").child(uID).child("GroupLocationKey").push();
-                    String group_location_id = group_location.getKey();
-                    String group_child = "Users/"+uID+"/GroupLocationKey/"+group_location_id;
-                    Map groupBody = new HashMap();
-                    groupBody.put("NameGroup",edit);
-                    Map groupDetail = new HashMap();
-                    groupDetail.put(group_child,groupBody);
-                    rootRef.updateChildren(groupDetail, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if(databaseError!=null){
-                                Log.d("Chat_Log",databaseError.getMessage().toString());
-                            }
-                            editstt.setText("");
-                        }
-                    });
-                    String group_childcon = "GroupLocationCon/"+group_location_id;
-                    String group_childconmember = "GroupLocationCon/"+group_location_id+"/Members";
-                    Map groupConBody = new HashMap();
-                    groupConBody.put("NameGroup",edit);
-                    Map groupConDetail = new HashMap();
-                    groupConDetail.put(group_childcon,groupConBody);
-                    rootRef.updateChildren(groupConDetail, new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-
-                        }
-                    });
-                    //them nhánh member
-                    String type = "admin";
-                    MemberLocations mem = new MemberLocations(type);
-                    rootRef.child("GroupLocationCon").child(group_location_id).child("Members").child(uID).setValue(mem, new DatabaseReference.CompletionListener() {
-                                @Override
-                                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-
-                                }
-                            });
 
                     //create randomkey invite
                     char[] chars1 = "ABCDEF012GHIJKL345MNOPQR678STUVWXYZ9".toCharArray();
@@ -149,19 +106,63 @@ public class LienKetActivity extends Fragment {
                     }
                     randomkey = sb1.toString();
                     //
-                    String inviteKey = "InviteKey/"+randomkey;
-                    Map inviteKeyCon = new HashMap();
-                    inviteKeyCon.put("GroupId",group_location_id);
-                    inviteKeyCon.put("NameGroup",edit);
-                    Map inviteKeyConDetail = new HashMap();
-                    inviteKeyConDetail.put(inviteKey,inviteKeyCon);
-                    rootRef.updateChildren(inviteKeyConDetail, new DatabaseReference.CompletionListener() {
+
+                    DatabaseReference group_location = rootRef.child("Users").child(uID).child("GroupLocationKey").push();
+                    String group_location_id = group_location.getKey();
+                    String group_child = "Users/" + uID + "/GroupLocationKey/" + group_location_id;
+                    Map groupBody = new HashMap();
+                    groupBody.put("NameGroup", edit);
+                    groupBody.put("InviteKey", randomkey);
+                    Map groupDetail = new HashMap();
+                    groupDetail.put(group_child, groupBody);
+                    rootRef.updateChildren(groupDetail, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError != null) {
+                                Log.d("Chat_Log", databaseError.getMessage().toString());
+                            }
+                            editstt.setText("");
+                        }
+                    });
+                    String xPhoto = "default";
+                    String xStatus = "Giới thiệu nhóm.";
+                    String group_childcon = "GroupLocationCon/" + group_location_id;
+                    //String group_childconmember = "GroupLocationCon/" + group_location_id + "/Members";
+                    Map groupConBody = new HashMap();
+                    groupConBody.put("NameGroup", edit);
+                    groupConBody.put("PhotoGroup",xPhoto);
+                    groupConBody.put("StatusGroup",xStatus);
+                    Map groupConDetail = new HashMap();
+                    groupConDetail.put(group_childcon, groupConBody);
+                    rootRef.updateChildren(groupConDetail, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                        }
+                    });
+                    //them nhánh member
+                    String type = "admin";
+                    MemberLocations mem = new MemberLocations(type,randomkey);
+                    rootRef.child("GroupLocationCon").child(group_location_id).child("Members").child(uID).setValue(mem, new DatabaseReference.CompletionListener() {
                         @Override
                         public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
 
                         }
                     });
 
+
+                    String inviteKey = "InviteKey/" + randomkey;
+                    Map inviteKeyCon = new HashMap();
+                    inviteKeyCon.put("GroupId", group_location_id);
+                    inviteKeyCon.put("NameGroup", edit);
+                    Map inviteKeyConDetail = new HashMap();
+                    inviteKeyConDetail.put(inviteKey, inviteKeyCon);
+                    rootRef.updateChildren(inviteKeyConDetail, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+
+                        }
+                    });
 
 
                     mProgressDialog.dismiss();
@@ -178,26 +179,6 @@ public class LienKetActivity extends Fragment {
             }
         });
         dialog.show();
-    }
-
-
-    // random key
-    public void CreateRandom() {
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                char[] chars1 = "ABCDEF012GHIJKL345MNOPQR678STUVWXYZ9".toCharArray();
-                StringBuilder sb1 = new StringBuilder();
-                Random random1 = new Random();
-                for (int i = 0; i < 6; i++) {
-                    char c1 = chars1[random1.nextInt(chars1.length)];
-                    sb1.append(c1);
-                }
-                String random_string = sb1.toString();
-                //malienket.setText(random_string);
-            }
-        });
-
     }
 
 }

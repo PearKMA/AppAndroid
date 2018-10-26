@@ -90,10 +90,10 @@ public class FriendFragment extends Fragment {
                                 @Override
                                 public void onClick(View view) {
                                     CharSequence options[] = new CharSequence[]{
-                                        username + "'s Profile ","Send Message"
+                                        "Hồ sơ "+username,"Gửi tin nhắn"
                                     };
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle("Select Options");
+                                    builder.setTitle("Chọn tính năng");
                                     builder.setItems(options, new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {

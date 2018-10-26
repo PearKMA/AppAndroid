@@ -76,11 +76,6 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
     private LocationManager locationManager;
     private DatabaseReference GroupLocationKeyRef;
     private String currentDate, currentTime, currentUserName;
-//    private String name2="";
-//    private String date2="";
-//    private String latitude2 = "";
-//    private String longtitude2 = "";
-//    private String time2="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

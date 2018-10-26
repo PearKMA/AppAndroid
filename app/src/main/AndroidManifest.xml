@@ -12,8 +12,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_SMS"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:name=".Chat.OfflineMode"
@@ -91,7 +91,8 @@
         <activity
             android:name=".NguoiThan.NhomNguoiThanMapActivity"
             android:label="@string/title_activity_nhom_nguoi_than_map" />
-        <activity android:name=".NguoiThan.QuanLyNhomActivity"></activity>
+        <activity android:name=".NguoiThan.QuanLyNhomActivity" />
+        <activity android:name=".NguoiThan.HelloNguoiThan"></activity>
     </application>
 
 </manifest>
