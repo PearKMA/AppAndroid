@@ -126,7 +126,7 @@ public class VungAnToanActivity extends Fragment{
                                     for (DataSnapshot childSbapshot : dataSnapshot.getChildren()) {
                                         name = String.valueOf(childSbapshot.child("name").getValue());
                                         lat =(Double) childSbapshot.child("latitude").getValue();
-                                        lon =(Double) childSbapshot.child("latitude").getValue();
+                                        lon =(Double) childSbapshot.child("longtitude").getValue();
                                         for (ListGiamSat ds : listName) {
                                             if (name.equals(ds.getName())){
                                                 i=1;
