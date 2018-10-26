@@ -198,12 +198,14 @@ public class MainActivity extends AppCompatActivity
                                    Toast.LENGTH_SHORT).show();
                        }
                    }
-
                    @Override
                    public void onCancelled(DatabaseError databaseError) {
 
                    }
                });
+           }else {
+               Toast.makeText(getApplicationContext(),"Location null rồi, thay gps đi!",Toast.LENGTH_SHORT)
+                       .show();
            }
            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
                    0, this);
@@ -235,7 +237,6 @@ public class MainActivity extends AppCompatActivity
             String currentDate=currentDateFormat.format(ccalForDate.getTime());
 
             String mess = mess1 + " lúc " + currentDate;
-            Log.e("TAG",""+mess);
             smsManager.sendTextMessage(phone, null, mess, pendingIntent,
                     null);
     }
