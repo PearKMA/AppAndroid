@@ -93,7 +93,7 @@ public class MapsActivity extends FragmentActivity implements
     private FirebaseAuth mAuth;
     private DatabaseReference UsersRef, GroupLocationRef, GroupLocationKeyRef;
     String locationKey;
-    public  static String name,locationUser,atTime;
+    public  static String locationUser,atTime;
     Timer timer=null;
     TimerTask timerTask=null;
 
@@ -313,7 +313,6 @@ public class MapsActivity extends FragmentActivity implements
                 locationInfoMap.put("time",currentTime);
 
                 GroupLocationKeyRef.updateChildren(locationInfoMap);
-                name=currentUserName;
                 locationUser =String.valueOf(latitude)+","+String.valueOf(longtitude);
                 atTime=currentTime +" "+currentDate;
             }

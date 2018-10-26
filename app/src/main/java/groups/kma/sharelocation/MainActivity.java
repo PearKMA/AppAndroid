@@ -8,6 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,6 +42,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import groups.kma.sharelocation.Chat.AllUsersActivity;
 import groups.kma.sharelocation.Chat.ChatActivity;
 import groups.kma.sharelocation.Chat.SettingsActivity;
@@ -53,9 +59,7 @@ import groups.kma.sharelocation.VungAnToan.VungAnToanActivity;
 import groups.kma.sharelocation.model.Users;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener//,OnMapReadyCallback,
-        //PlaceSelectionListener, GoogleApiClient.ConnectionCallbacks,
-        //GoogleApiClient.OnConnectionFailedListener, LocationListener
+        implements NavigationView.OnNavigationItemSelectedListener,LocationListener
    {
     TextView navUsername, navEmail;
     ImageView avatar,imageviewcanhbao;
@@ -71,7 +75,8 @@ public class MainActivity extends AppCompatActivity
     private GoogleMap googleMap;
     private Marker marker;
     private LocationManager locationManager;
-
+    private String nameUser;
+    private String lastKnownLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,27 +167,47 @@ public class MainActivity extends AppCompatActivity
        }
 
        private void sendSmSAlert() {
-           final SmsManager smsManager=SmsManager.getDefault();
-           Intent intent=new Intent("ACTION_MSG_SEND");
-           final PendingIntent pendingIntent=PendingIntent.getBroadcast(this,0,intent,0);
-           registerReceiver(new BroadcastReceiver() {
-               @Override
-               public void onReceive(Context context, Intent intent) {
-                   int result=getResultCode();
-                   String msg="Gửi thành công!";
-                   if (result!=Activity.RESULT_OK)
-                   {
-                       msg="Có lỗi xảy ra, vui lòng thử lại!";
-                   }
-                   Toast.makeText(getApplicationContext(),msg,Toast.LENGTH_SHORT).show();
-               }
+           locationManager = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
+           Criteria criteria = new Criteria();
+        /*Sử dụng lớp Criteria để yêu cầu nhà cung cấp xử lý chính xác những số liệu có sẵn như:
+        vĩ độ và kinh độ, tốc độ, độ cao, chi phí và yêu về cầu năng lương điện. */
+           String bestProvider = locationManager.getBestProvider(criteria, true);
+           Location location = locationManager.getLastKnownLocation(bestProvider);
+           if (location != null) {
+               lastKnownLocation=location.getLatitude()+","+location.getLatitude();
+           }
+           locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+                   0, this);
+           if (BaoDongActivity.smsPhone!=null) {
+            final SmsManager smsManager = SmsManager.getDefault();
+            Intent intent = new Intent("ACTION_MSG_SEND");
+            final PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+            registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    int result = getResultCode();
+                    String msg = "Gửi thành công!";
+                    if (result != Activity.RESULT_OK) {
+                        msg = "Có lỗi xảy ra, vui lòng thử lại!";
+                    }
+                    Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                }
 
-           },new IntentFilter("ACTION_MSG_SEND"));
-           String mess1="User: "+MapsActivity.name+" đã gửi tín hiệu khẩn cấp tại vị trí "+
-                   MapsActivity.locationUser;
-           String mess=mess1+" lúc "+MapsActivity.atTime;
-           smsManager.sendTextMessage(BaoDongActivity.smsPhone,null,mess,pendingIntent,
-                   null);
+            }, new IntentFilter("ACTION_MSG_SEND"));
+            String mess1 = "User: " + nameUser + " đã gửi tín hiệu khẩn cấp tại vị trí " +
+                    lastKnownLocation;
+
+            Calendar ccalForDate=Calendar.getInstance();
+            SimpleDateFormat currentDateFormat = new SimpleDateFormat("hh:mm a dd/MM");
+            String currentDate=currentDateFormat.format(ccalForDate.getTime());
+
+            String mess = mess1 + " lúc " + currentDate;
+            smsManager.sendTextMessage(BaoDongActivity.smsPhone, null, mess, pendingIntent,
+                    null);
+        }else {
+            Toast.makeText(getApplicationContext(),"Có lỗi khi thiết lập số điện thoại!",
+                    Toast.LENGTH_SHORT).show();
+        }
        }
 
 
@@ -321,4 +346,23 @@ public class MainActivity extends AppCompatActivity
         alert.show();
     }
 
-}
+       @Override
+       public void onLocationChanged(Location location) {
+           lastKnownLocation=location.getLatitude()+","+location.getLongitude();
+       }
+
+       @Override
+       public void onStatusChanged(String s, int i, Bundle bundle) {
+
+       }
+
+       @Override
+       public void onProviderEnabled(String s) {
+
+       }
+
+       @Override
+       public void onProviderDisabled(String s) {
+
+       }
+   }

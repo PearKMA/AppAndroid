@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_lienket"
             android:icon="@drawable/ic_menu_tc_key_24"
-            android:title="Liên kết người thân" />
+            android:title="Tham gia nhóm vị trí" />
         <item
             android:id="@+id/nav_nguoithan"
             android:icon="@drawable/ic_menu_tc_location_24"
@@ -15,7 +15,7 @@
         <item
             android:id="@+id/nav_guitin"
             android:icon="@drawable/ic_menu_tc_messes_24"
-            android:title="Gửi tin"/>
+            android:title="Tin nhắn"/>
         <item
             android:id="@+id/nav_quanlynhom"
             android:icon="@drawable/ic_menu_tc_family_24"
@@ -34,8 +34,8 @@
                 android:title="Tìm bạn bè" />
             <item
                 android:id="@+id/nav_alert"
-                android:icon="@drawable/alert"
-                android:title="Báo động"/>
+                android:icon="@drawable/addalert"
+                android:title="Thiết lập báo động"/>
             <item
                 android:id="@+id/nav_caidat"
                 android:icon="@drawable/ic_menu_manage"
