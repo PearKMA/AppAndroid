@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity
         /*Sử dụng lớp Criteria để yêu cầu nhà cung cấp xử lý chính xác những số liệu có sẵn như:
         vĩ độ và kinh độ, tốc độ, độ cao, chi phí và yêu về cầu năng lương điện. */
         String bestProvider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
            if (location != null) {
                lastKnownLocation=location.getLatitude()+","+location.getLongitude();
                String UserId = mAuth.getCurrentUser().getUid();
@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity
                Toast.makeText(getApplicationContext(),"Location null rồi, thay gps đi!",Toast.LENGTH_SHORT)
                        .show();
            }
-           locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
+           locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
                    0, this);
 
        }
