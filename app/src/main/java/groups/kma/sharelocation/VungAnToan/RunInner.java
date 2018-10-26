@@ -109,13 +109,13 @@ public class RunInner extends BroadcastReceiver implements LocationListener {
         /*Sử dụng lớp Criteria để yêu cầu nhà cung cấp xử lý chính xác những số liệu có sẵn như:
         vĩ độ và kinh độ, tốc độ, độ cao, chi phí và yêu về cầu năng lương điện. */
         String bestProvider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(bestProvider);
+        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (location != null) {
             myLat=location.getLatitude();
             myLong=location.getLongitude();
             gettedLocation="OK";
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0,
                 0, this);
     }
 

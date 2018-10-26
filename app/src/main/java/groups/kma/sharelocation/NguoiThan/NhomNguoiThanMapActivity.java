@@ -240,7 +240,7 @@ public class NhomNguoiThanMapActivity extends FragmentActivity implements OnMapR
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String bestProvider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(bestProvider);
+        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         //Location locationx = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
         if (location != null) {
             if (null != currentLocationMarker) {
