@@ -13,6 +13,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -219,8 +220,8 @@ public class MainActivity extends AppCompatActivity
         });
     }
     private void send(String lastKnownLocation,String phone) {
-            final SmsManager smsManager = SmsManager.getDefault();
-            Intent intent = new Intent("ACTION_MSG_SEND");
+        SmsManager smsManager = SmsManager.getDefault();
+            /*Intent intent = new Intent("ACTION_MSG_SEND");
             final PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext()
                     , 0, intent, 0);
             registerReceiver(new BroadcastReceiver() {
@@ -235,16 +236,18 @@ public class MainActivity extends AppCompatActivity
                 }
 
             }, new IntentFilter("ACTION_MSG_SEND"));
+            */
             String mess1 = "Khẩn cấp: " + nameUser + " cần trợ giúp! Vị trí " +
                     lastKnownLocation;
-
             Calendar ccalForDate=Calendar.getInstance();
             SimpleDateFormat currentDateFormat = new SimpleDateFormat("hh:mm a dd/MM");
             String currentDate=currentDateFormat.format(ccalForDate.getTime());
-
             String mess = mess1 + " lúc " + currentDate;
-            smsManager.sendTextMessage(phone, null, mess.toString().trim(), pendingIntent,
+            smsManager.sendTextMessage(phone, null, mess.toString().trim(), null,
                     null);
+        Intent intentx = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + phone));
+        intentx.putExtra("sms_body", mess);
+        startActivity(intentx);
     }
 
 

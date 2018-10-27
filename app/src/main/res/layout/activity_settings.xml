@@ -49,11 +49,25 @@
         android:textColor="@color/mauTrang"
         android:layout_below="@id/settingStatus"
         android:id="@+id/button2"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentLeft="true"
         android:layout_width="133dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
         android:text="Đổi ảnh" />
+    <Button
+        android:background="@drawable/shape2"
+        android:textColor="@color/mauTrang"
+        android:layout_below="@id/settingStatus"
+        android:id="@+id/buttonDMK"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="133dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Đổi Mật khẩu" />
     <Button
         android:id="@+id/button3"
         android:layout_below="@id/button2"

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@color/mauTrang"
+    tools:context=".Chat.ChangePassActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/circle"
+            android:padding="10dp"
+            android:src="@drawable/img_authentication"
+            android:tint="@color/white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="sans-serif-medium"
+            android:text="ĐỔI MẬT KHẨU"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp">
+
+        <ImageView
+            android:id="@+id/imageView_emailIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_left"
+            android:padding="8dp"
+            android:src="@drawable/img_authentication"
+            android:tint="@color/white" />
+
+        <EditText
+            android:id="@+id/edtCurrentPW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView_emailIcon"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/imageView_emailIcon"
+            android:background="@drawable/shape_right"
+            android:hint="Mật khẩu hiện tại"
+            android:inputType="textPassword"
+            android:paddingLeft="20dp"
+            android:textSize="15sp" />
+    </RelativeLayout>
+    <!--edtNewPW-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp">
+
+        <ImageView
+            android:id="@+id/imageView_passwordIcon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_left"
+            android:padding="8dp"
+            android:src="@drawable/img_authentication"
+            android:tint="@color/white" />
+
+        <EditText
+            android:id="@+id/edtNewPW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView_passwordIcon"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/imageView_passwordIcon"
+            android:background="@color/editTextBG"
+            android:hint="Mật Khẩu"
+            android:inputType="textPassword"
+            android:paddingLeft="20dp"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp">
+
+        <ImageView
+            android:id="@+id/imageView_passwordIcon2"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/shape_left"
+            android:padding="8dp"
+            android:src="@drawable/img_authentication"
+            android:tint="@color/white" />
+
+        <EditText
+            android:id="@+id/edtConfirmNewPW"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView_passwordIcon2"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/imageView_passwordIcon2"
+            android:background="@color/editTextBG"
+            android:hint="Mật Khẩu"
+            android:inputType="textPassword"
+            android:paddingLeft="20dp"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="15dp">
+
+        <Button
+            android:id="@+id/btCancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/shape2"
+            android:onClick="btCancel"
+            android:text="Hủy"
+            android:textAllCaps="false"
+            android:textColor="@color/mauTrang" />
+
+        <Button
+            android:id="@+id/btChange"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape2"
+            android:onClick="btChange"
+            android:text="Xác nhận"
+            android:textAllCaps="false"
+            android:textColor="@color/mauTrang" />
+    </LinearLayout>
+</LinearLayout>

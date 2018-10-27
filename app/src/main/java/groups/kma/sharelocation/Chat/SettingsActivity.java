@@ -52,7 +52,7 @@ public class SettingsActivity extends AppCompatActivity {
     private FirebaseUser mCurrentUser;
     private TextView displayname, status;
     private CircleImageView mImage;
-    Button changeStt, changeImg;
+    Button changeStt, changeImg,changePass;
     private static final int GALLERY_PICK = 1;
     Bitmap thumb_bitmap;
     private DatabaseReference mStatusDatabase;
@@ -69,7 +69,7 @@ public class SettingsActivity extends AppCompatActivity {
         mImage = findViewById(R.id.settingImage);
         changeImg = findViewById(R.id.button2);
         changeStt = findViewById(R.id.button3);
-
+        changePass = findViewById(R.id.buttonDMK);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -117,7 +117,13 @@ public class SettingsActivity extends AppCompatActivity {
 
             }
         });
-
+        changePass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent changpass = new Intent(SettingsActivity.this,ChangePassActivity.class);
+                startActivity(changpass);
+            }
+        });
         changeImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
