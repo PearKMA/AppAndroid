@@ -95,6 +95,7 @@ public class ActivityDangNhap extends AppCompatActivity {
     }
 
     public void tvForgot(View view) {
+        startActivity(new Intent(this, QuenMatKhauActivity.class));
     }
 
     public void btSignIn(View view) {
